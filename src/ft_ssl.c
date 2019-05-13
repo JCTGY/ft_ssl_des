@@ -24,7 +24,7 @@ static int		ssl_stdin(t_ssl *ssl)
 		return (ssl_stdin(ssl));
 	mini_gnl(ssl, hash);
 	ssl->name = 0;
-	return (0);
+	return (ssl_stdin(ssl));
 }
 
 static int		allocate_sflag(char **argv, t_ssl *ssl, int i, int x)
