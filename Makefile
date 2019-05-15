@@ -1,16 +1,19 @@
-NAME = ft_ssl
+NAME := ft_ssl
 
-SRC_DIR = src/
-OBJ_DIR = obj/
+SRC_DIR := src/
+MD5_DIR := src/md5/
+DES_DIR := src/des/
+OBJ_DIR := obj/
 LIBFT_DIR = libft/
 
-CFLAG = -Wall -Wextra -Werror
+CFLAG := -Wall -Wextra -Werror
 
-INC = -Iincludes
+INC := -Iincludes
 
-ALL_SRC =  ft_ssl.c \
-		   ssl_help.c \
-		   ssl_calculate.c \
+MAIN_SRC :=  ft_ssl.c \
+		    ssl_calculate.c \
+
+MD5_SRC :=  ssl_help.c \
 		   ssl_md5.c \
 		   ssl_md5_help.c \
 		   ssl_sha256.c \
@@ -21,8 +24,15 @@ ALL_SRC =  ft_ssl.c \
 		   ssl_sha512_help.c \
 		   ssl_sha_print.c \
 
-SRC = $(addprefix $(SRC_DIR), $(ALL_SRC))
-OBJ = $(addprefix $(OBJ_DIR), $(ALL_SRC:.c=.o))
+DES_SRC :=  ssl_base64.c \
+
+SRC = $(addprefix $(SRC_DIR), $(MAIN_SRC)) \
+	  $(addprefix $(MD5_DIR), $(MD5_SRC)) \
+	  $(addprefix $(DES_DIR), $(DES_SRC)) 
+
+OBJ := $(addprefix $(OBJ_DIR), $(MAIN_SRC:.c=.o)) \
+	$(addprefix $(OBJ_DIR), $(MD5_SRC:.c=.o)) \
+		$(addprefix $(OBJ_DIR), $(DES_SRC:.c=.o))
 
 all: $(NAME)
 
@@ -32,6 +42,12 @@ $(NAME): $(OBJ)
 
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 	mkdir -p obj
+	gcc -c $(CFLAG) $(INC) $< -o $@
+
+$(OBJ_DIR)%.o: $(MD5_DIR)%.c
+	gcc -c $(CFLAG) $(INC) $< -o $@
+
+$(OBJ_DIR)%.o: $(DES_DIR)%.c
 	gcc -c $(CFLAG) $(INC) $< -o $@
 
 clean:

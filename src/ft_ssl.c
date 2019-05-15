@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/16 18:08:12 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/04/29 20:31:29 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/05/14 19:19:30 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static int		ssl_stdin(t_ssl *ssl)
 		return (ssl_stdin(ssl));
 	mini_gnl(ssl, hash);
 	ssl->name = 0;
-	return (ssl_stdin(ssl));
+	return (0);
 }
 
 static int		allocate_sflag(char **argv, t_ssl *ssl, int i, int x)
