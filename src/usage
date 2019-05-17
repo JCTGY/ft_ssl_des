@@ -1,0 +1,23 @@
+usage: ./ft_ssl base64 [-i file] [-o file] [-d] [-e]
+usage: ./ft_ssl ciphername [-a] [-d] [-e] [-i file] [-v IV]
+             [-k key]  [-o file] [-p pass] [-s salt]
+
+ -a	    Perform base64 encoding/decoding (alias -base64)
+ -d	    Decrypt the input data
+ -e	    Encrypt the input data (default)
+ -i file    Input file to read from (default stdin)
+ -v IV      IV to use, specified as a hexidecimal string
+ -k key	    Key to use, specified as a hexidecimal string
+ -o file    Output file to write to (default stdout)
+ -p pass    Password in ascii is the next argument
+ -s salt    Salt to use, specified as a hexidecimal string
+
+ ciphername:
+ des
+ des-ecb
+ des-cbc
+ des-ofb
+ des3
+ des3-ecb
+ des3-cbc
+ des3-ofb
