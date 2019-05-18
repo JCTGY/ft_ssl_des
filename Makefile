@@ -29,6 +29,7 @@ MD5_SRC :=	ssl_help.c \
 DES_SRC :=	ssl_base64.c \
 			ssl_cpcverify.c \
 			ssl_base64_std.c \
+			ssl_base64_algo.c \
 
 
 SRC = $(addprefix $(SRC_DIR), $(MAIN_SRC)) \

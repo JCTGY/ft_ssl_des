@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 09:30:04 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/05/17 10:28:24 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/05/17 19:19:57 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ int				dis_error(char *tssl, int error, char flag, char *file)
 	}
 	else if (error == NO_FILE)
 		ft_printf("%s: %s: No such file or directory\n", tssl, file);
+	else if (error == N_BASE64)
+		ft_printf("%s is not base64 file\n", file);
 	return (0);
 }
 

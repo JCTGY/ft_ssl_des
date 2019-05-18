@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/17 11:01:06 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/05/17 15:12:37 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/05/17 21:27:18 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,8 @@ static int		ssl_ba_check2(t_ba64 *ba)
 			ft_printf("%s is a directory\n", ba->ifd);
 		return (-1);
 	}
-	ft_putstr_fd(ba->msg, fd);
+	ssl_base64_algo(ba);
+	ft_putstr_fd(ba->data, fd);
 	return (1);
 }
 
@@ -100,5 +101,7 @@ int				ssl_base64_std(t_ba64 *ba)
 		ssl_get_stdin(ba);
 	if (ssl_ba_check2(ba) == -1)
 		return (0);
+	if (!ba->ofd)
+		ssl_base64_algo(ba);
 	return (1);
 }

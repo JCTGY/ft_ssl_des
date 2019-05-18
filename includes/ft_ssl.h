@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/16 18:09:02 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/05/17 14:45:23 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/05/17 19:20:28 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@
 
 # define W_NOFILE		1
 # define W_UKNOW		2
+# define N_BASE64		3
 
 # define BA64_D			1
 # define BA64_E			2
@@ -59,6 +60,7 @@ typedef struct			s_ba64
 	char				*ifd;
 	char				*ofd;
 	char				*msg;
+	char				*data;
 }						t_ba64;
 
 typedef struct			s_hash
@@ -83,6 +85,7 @@ int						ssl_sha384_init(uint8_t *msg, size_t len, t_ssl *ssl);
 int						ssl_sha512_init(uint8_t *msg, size_t len, t_ssl *ssl);
 int						ssl_base64(int ac, char **av);
 int						ssl_base64_std(t_ba64 *ba);
+int						ssl_base64_algo(t_ba64 *ba);
 void					del_str(t_ssl *ssl);
 void					display_usage(void);
 
