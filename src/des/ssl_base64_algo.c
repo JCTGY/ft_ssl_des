@@ -6,24 +6,29 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/17 15:49:04 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/05/20 20:10:50 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/05/21 13:50:35 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_base64.h"
 
-static int			check_base64(char *msg)
+static void			ssl_base64_dchelp(t_ba64 *ba, t_balgo al)
 {
-	int		i;
-
-	i = -1;
-	while (++i < (int)(ft_strlen(msg) - 1))
+	while (al.x < al.old)
 	{
-		if (!ft_strchr(g_base64_encd, msg[i]) &&
-				(i < ((int)ft_strlen(msg) - 2)) && msg[i] != '=')
-			return (0);
+		al.ta = (ba->msg[al.x] == '=') ?
+			0 & al.x++ : g_base64_decd[(int)ba->msg[al.x++]];
+		al.tb = (ba->msg[al.x] == '=') ?
+			0 & al.x++ : g_base64_decd[(int)ba->msg[al.x++]];
+		al.tc = (ba->msg[al.x] == '=') ?
+			0 & al.x++ : g_base64_decd[(int)ba->msg[al.x++]];
+		al.td = (ba->msg[al.x] == '=') ?
+			0 & al.x++ : g_base64_decd[(int)ba->msg[al.x++]];
+		al.al = (al.ta << 18) + (al.tb << 12) + (al.tc << 6) + (al.td);
+		ba->data[al.y++] = ((al.al >> 2 * 8) & 127);
+		ba->data[al.y++] = ((al.al >> 1 * 8) & 127);
+		ba->data[al.y++] = ((al.al >> 0 * 8) & 127);
 	}
-	return (1);
 }
 
 static int			ssl_base64_decode(t_ba64 *ba, t_balgo al)
@@ -34,30 +39,13 @@ static int			ssl_base64_decode(t_ba64 *ba, t_balgo al)
 	al.old = ft_strlen(ba->msg);
 	al.len = 3 * (al.old / 4);
 	ba->data = ft_strnew(al.len);
-	while (al.x < al.old)
-	{
-		al.ta = (ba->msg[al.x] == '=') ? 0 & al.x++ : ba->msg[al.x++];
-		al.tb = (ba->msg[al.x] == '=') ? 0 & al.x++ : ba->msg[al.x++];
-		al.tc = (ba->msg[al.x] == '=') ? 0 & al.x++ : ba->msg[al.x++];
-		al.td = (ba->msg[al.x] == '=') ? 0 & al.x++ : ba->msg[al.x++];
-		al.al = (al.ta << 18) + (al.tb << 12) + (al.tc << 6) + (al.td);
-		ba->data[al.y++] = g_base64_decd[(al.al >> 2 * 8) & 127];
-		ba->data[al.y++] = g_base64_decd[(al.al >> 1 * 8) & 127];
-		ba->data[al.y++] = g_base64_decd[(al.al >> 0 * 8) & 127];
-	}
-	ba->data[al.y] = '\0';
-	printf("%s\n", ba->data);
+	ssl_base64_dchelp(ba, al);
+	ba->data[al.len] = '\0';
 	return (1);
 }
 
-static void			ssl_base64_encode(t_ba64 *ba, t_balgo al)
+static void			ssl_base64_enhelp(t_ba64 *ba, t_balgo al)
 {
-	if (ba->msg == NULL)
-		return ;
-	al.old = ft_strlen(ba->msg);
-	al.len = 4 * ((al.old + 2) / 3);
-	al.len = al.len + (al.len / 64) + 1;
-	ba->data = ft_strnew(al.len);
 	while (al.x < al.old)
 	{
 		al.ta = al.x < al.old ? (uint8_t)ba->msg[al.x++] : 0;
@@ -74,13 +62,24 @@ static void			ssl_base64_encode(t_ba64 *ba, t_balgo al)
 			al.c++;
 		}
 	}
+}
+
+static void			ssl_base64_encode(t_ba64 *ba, t_balgo al)
+{
+	if (ba->msg == NULL)
+		return ;
+	al.old = ft_strlen(ba->msg);
+	al.len = 4 * ((al.old + 2) / 3);
+	al.len = al.len + (al.len / 64) + 1;
+	ba->data = ft_strnew(al.len);
+	ssl_base64_enhelp(ba, al);
 	al.m = al.old % 3 + 2;
 	while (--al.m)
 		ba->data[al.len - al.m] = '=';
 	ba->data[al.len - 1] = '\n';
 }
 
-int				ssl_base64_algo(t_ba64 *ba)
+int					ssl_base64_algo(t_ba64 *ba)
 {
 	t_balgo		al;
 

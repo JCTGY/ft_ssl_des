@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/17 11:01:06 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/05/17 21:27:18 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/05/21 13:52:15 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ static void		ssl_get_stdin(t_ba64 *ba)
 
 static int		ssl_ba_check2(t_ba64 *ba)
 {
-	int		fd;
-	mode_t	 mode;
+	int			fd;
+	mode_t		mode;
 
 	mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
 	if (ba->ofd == NULL)
