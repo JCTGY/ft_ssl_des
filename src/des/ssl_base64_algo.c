@@ -6,41 +6,11 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/17 15:49:04 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/05/17 21:27:20 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/05/20 20:10:50 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_base64.h"
-
-static void			ssl_base64_reline(t_ba64 *ba)
-{
-	int		nl;
-	int		i;
-	char	*re;
-
-	nl = 0;
-	i = -1;
-	while (ba->msg[++i])
-	{
-		if (ba->msg[i] == '\n')
-			nl++;
-	}
-	if (!nl)
-		return ;
-	re = ft_strnew(ft_strlen(ba->msg) - nl);
-	i = 0;
-	while (*ba->msg)
-	{
-		if (*ba->msg != '\n')
-			re[i] = *ba->msg;
-		(ba->msg)++;
-	}
-	ft_printf("is it herer\n");
-//	ft_strdel(&(ba->msg));
-	ba->msg = ft_strdup(re);
-	ft_strdel(&re);
-	printf("%s\n", ba->msg);
-}
 
 static int			check_base64(char *msg)
 {
@@ -49,7 +19,8 @@ static int			check_base64(char *msg)
 	i = -1;
 	while (++i < (int)(ft_strlen(msg) - 1))
 	{
-		if (!ft_strchr(g_base64_encd, msg[i]) && msg[i] != '=')
+		if (!ft_strchr(g_base64_encd, msg[i]) &&
+				(i < ((int)ft_strlen(msg) - 2)) && msg[i] != '=')
 			return (0);
 	}
 	return (1);
@@ -57,10 +28,25 @@ static int			check_base64(char *msg)
 
 static int			ssl_base64_decode(t_ba64 *ba, t_balgo al)
 {
-	ssl_base64_reline(ba);
-	if (!check_base64(ba->msg))
+	if (!ssl_base64_reline(ba, ft_strlen(ba->msg)) ||
+			(!check_base64(ba->msg)) || (ft_strlen(ba->msg) % 4))
 		return (dis_error(NULL, N_BASE64, 0, "data"));
-	al.len = 0;
+	al.old = ft_strlen(ba->msg);
+	al.len = 3 * (al.old / 4);
+	ba->data = ft_strnew(al.len);
+	while (al.x < al.old)
+	{
+		al.ta = (ba->msg[al.x] == '=') ? 0 & al.x++ : ba->msg[al.x++];
+		al.tb = (ba->msg[al.x] == '=') ? 0 & al.x++ : ba->msg[al.x++];
+		al.tc = (ba->msg[al.x] == '=') ? 0 & al.x++ : ba->msg[al.x++];
+		al.td = (ba->msg[al.x] == '=') ? 0 & al.x++ : ba->msg[al.x++];
+		al.al = (al.ta << 18) + (al.tb << 12) + (al.tc << 6) + (al.td);
+		ba->data[al.y++] = g_base64_decd[(al.al >> 2 * 8) & 127];
+		ba->data[al.y++] = g_base64_decd[(al.al >> 1 * 8) & 127];
+		ba->data[al.y++] = g_base64_decd[(al.al >> 0 * 8) & 127];
+	}
+	ba->data[al.y] = '\0';
+	printf("%s\n", ba->data);
 	return (1);
 }
 

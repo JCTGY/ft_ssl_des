@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/17 15:55:18 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/05/17 21:06:53 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/05/20 20:18:55 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static char			g_base64_encd[] =
 	'4', '5', '6', '7', '8', '9', '+', '/'
 };
 
-static int			g_base64_decd[] =
+static char			g_base64_decd[] =
 {
     127, 127, 127, 127, 127, 127, 127, 127, 127, 127,
     127, 127, 127, 127, 127, 127, 127, 127, 127, 127,
@@ -49,6 +49,7 @@ typedef struct		s_balgo
 	uint32_t		ta;
 	uint32_t		tb;
 	uint32_t		tc;
+	uint32_t		td;
 	uint32_t		al;
 	int				c;
 	int				x;
@@ -57,5 +58,15 @@ typedef struct		s_balgo
 	int				old;
 	int				m;
 }					t_balgo;
+
+typedef struct		s_index
+{
+	int				i;
+	int				c;
+	int				n;
+	int				t;
+}					t_index;
+
+int					ssl_base64_reline(t_ba64 *ba, int len);
 
 #endif
