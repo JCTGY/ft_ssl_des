@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/16 18:09:02 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/05/17 19:20:28 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/05/21 19:17:56 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,9 @@ int						ssl_sha512_init(uint8_t *msg, size_t len, t_ssl *ssl);
 int						ssl_base64(int ac, char **av);
 int						ssl_base64_std(t_ba64 *ba);
 int						ssl_base64_algo(t_ba64 *ba);
+int						ssl_des_flag(t_ba64 *ba, int ac, char **av, int i);
 void					del_str(t_ssl *ssl);
 void					display_usage(void);
+void					ssl_free_ba(t_ba64 *ba);
 
 #endif

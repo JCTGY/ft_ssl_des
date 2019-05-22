@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/17 11:01:06 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/05/21 13:52:15 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/05/21 18:19:24 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,8 +100,12 @@ int				ssl_base64_std(t_ba64 *ba)
 	if (ba->msg == NULL)
 		ssl_get_stdin(ba);
 	if (ssl_ba_check2(ba) == -1)
+	{
+		ssl_free_ba(ba);
 		return (0);
+	}
 	if (!ba->ofd)
 		ssl_base64_algo(ba);
+	ssl_free_ba(ba);
 	return (1);
 }

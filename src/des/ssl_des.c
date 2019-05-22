@@ -1,22 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ssl_cpverift.c                                     :+:      :+:    :+:   */
+/*   ssl_des.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/05/16 09:59:41 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/05/21 20:35:22 by jchiang-         ###   ########.fr       */
+/*   Created: 2019/05/21 19:01:21 by jchiang-          #+#    #+#             */
+/*   Updated: 2019/05/21 20:35:23 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
 
-int		ssl_cpcverify(int ac, char **av)
+int				ssl_base64_dec(int ac, char **av)
 {
-	if (!(ft_strcmp(av[1], "base64")))
-		ssl_base64(ac, av);
-	else if (!(ft_strcmp(av[1], "des") || !(ft_strcmp(av[1], "des-ecb"))
-		ssl_base64_des(ac, av);
-	return (0);
+	t_ba64		ba;
+
+	ft_bzero(&ba, sizeof(ba));
+	if (!ssl_des_flag(&ba, ac, av, 1))
+		return (0);
+	if (!ssl_base64_std(&ba))
+		return (0);
 }

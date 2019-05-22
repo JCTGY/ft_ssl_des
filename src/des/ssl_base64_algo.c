@@ -6,11 +6,12 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/17 15:49:04 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/05/21 13:50:35 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/05/21 19:10:27 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_base64.h"
+#include "ft_ssl.h"
 
 static void			ssl_base64_dchelp(t_ba64 *ba, t_balgo al)
 {
@@ -73,7 +74,7 @@ static void			ssl_base64_encode(t_ba64 *ba, t_balgo al)
 	al.len = al.len + (al.len / 64) + 1;
 	ba->data = ft_strnew(al.len);
 	ssl_base64_enhelp(ba, al);
-	al.m = al.old % 3 + 2;
+	al.m = (al.old % 3) ? (5 - al.old % 3) : 1;
 	while (--al.m)
 		ba->data[al.len - al.m] = '=';
 	ba->data[al.len - 1] = '\n';
