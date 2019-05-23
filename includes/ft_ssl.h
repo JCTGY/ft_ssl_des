@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/16 18:09:02 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/05/21 19:17:56 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/05/22 20:35:07 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,12 @@
 # define W_NOFILE		1
 # define W_UKNOW		2
 # define N_BASE64		3
+# define H_TOLONG		4
+# define H_NOVAL		5
 
 # define BA64_D			1
 # define BA64_E			2
+# define BA64_A			3
 
 typedef struct			s_ssl
 {
@@ -54,13 +57,16 @@ typedef struct			s_ssl
 typedef struct			s_ba64
 {
 	int					aoe;
+	int					a;
 	char				*key;
+	char				*skey;
 	char				*iv;
 	char				*salt;
 	char				*ifd;
 	char				*ofd;
 	char				*msg;
 	char				*data;
+	char				*cmd;
 }						t_ba64;
 
 typedef struct			s_hash
@@ -84,6 +90,7 @@ int						ssl_sha224_init(uint8_t *msg, size_t len, t_ssl *ssl);
 int						ssl_sha384_init(uint8_t *msg, size_t len, t_ssl *ssl);
 int						ssl_sha512_init(uint8_t *msg, size_t len, t_ssl *ssl);
 int						ssl_base64(int ac, char **av);
+int						ssl_base64_des(int ac, char **av);
 int						ssl_base64_std(t_ba64 *ba);
 int						ssl_base64_algo(t_ba64 *ba);
 int						ssl_des_flag(t_ba64 *ba, int ac, char **av, int i);

@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/17 11:01:06 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/05/21 18:19:24 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/05/22 20:04:36 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,14 +41,17 @@ static int		ssl_ba_check2(t_ba64 *ba)
 	if ((fd = open(ba->ofd, O_WRONLY | O_CREAT | O_TRUNC, mode)) == -1)
 	{
 		if (errno == ENOENT)
-			ft_printf("%s: No such file or directory\n", ba->ifd);
+			ft_printf("%s: No such file or directory\n", ba->ofd);
 		else if (errno == EACCES)
-			ft_printf("%s: Permission denied\n", ba->ifd);
+			ft_printf("%s: Permission denied\n", ba->ofd);
 		if (errno == EISDIR)
-			ft_printf("%s is a directory\n", ba->ifd);
+			ft_printf("%s is a directory\n", ba->ofd);
 		return (-1);
 	}
-	ssl_base64_algo(ba);
+//	if (ft_strcmp(ba->cmd, "base64"))
+//		ssl_des_algo(ba);
+	if (!ft_strcmp(ba->cmd, "base64") || ba->a == BA64_A)
+		ssl_base64_algo(ba);
 	ft_putstr_fd(ba->data, fd);
 	return (1);
 }
@@ -104,8 +107,5 @@ int				ssl_base64_std(t_ba64 *ba)
 		ssl_free_ba(ba);
 		return (0);
 	}
-	if (!ba->ofd)
-		ssl_base64_algo(ba);
-	ssl_free_ba(ba);
 	return (1);
 }

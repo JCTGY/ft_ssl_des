@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 09:59:41 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/05/21 20:35:22 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/05/22 10:00:09 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int		ssl_cpcverify(int ac, char **av)
 {
 	if (!(ft_strcmp(av[1], "base64")))
 		ssl_base64(ac, av);
-	else if (!(ft_strcmp(av[1], "des") || !(ft_strcmp(av[1], "des-ecb"))
+	else if (!(ft_strcmp(av[1], "des")) || !(ft_strcmp(av[1], "des-ecb")))
 		ssl_base64_des(ac, av);
 	return (0);
 }

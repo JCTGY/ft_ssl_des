@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 09:30:04 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/05/20 18:35:39 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/05/22 09:19:46 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,10 @@ int				dis_error(char *tssl, int error, char flag, char *file)
 		ft_printf("%s: %s: No such file or directory\n", tssl, file);
 	else if (error == N_BASE64)
 		ft_printf("Is not base64 file\n");
+	else if (error == H_TOLONG)
+		ft_printf("hex string is too long\ninvalid hex %s value", file);
+	else if (error == H_NOVAL)
+		ft_printf("non-hex digit\ninvalid hex %s value", file);
 	return (0);
 }
 
