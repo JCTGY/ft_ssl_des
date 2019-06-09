@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/04 17:58:04 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/08 15:14:48 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/08 22:31:27 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,8 @@ int					ssl_shift_key(t_ba64 *ba, t_key *k, uint64_t sk[16])
 	int			b;
 
 	i = -1;
-	temp = swap_64bit(*(uint64_t *)k->key);
+	temp = (ba->key) ? swap_64bit(*(uint64_t *)k->key)
+		: (*(uint64_t *)k->key);
 	temp = des_pc1(temp);
 	des_half_key(kc, (temp >> 36) & 0xFFFFFFF);
 	des_half_key(kd, (temp >> 8) & 0xFFFFFFF);

@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/22 20:15:46 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/08 20:09:26 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/08 22:31:28 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,14 +58,10 @@ static uint64_t		ssl_expand(uint64_t in)
 
 	i = -1;
 	r = 0;
-//	printf("in = %llx\n", in);
 	while (++i < 48)
 	{
 		tmp = (in >> (32 - g_des_expan[i])) & 1;
 		r <<= 1;
-	//	printf("in = %llx\n", in);
-		//printf("tmp = %llx\n", tmp);
-		//printf("tmp = %d\n", 32 - g_des_expan[i]);
 		r += tmp;
 	}
 	return (r);
@@ -74,30 +70,13 @@ static uint64_t		ssl_expand(uint64_t in)
 static uint64_t		ssl_des_bit(uint64_t in, int n, const unsigned char *g)
 {
 	uint64_t	r;
-//	uint64_t	tmp;
 	int			i;
-//	int			c;
 
 	i = -1;
 	r = 0;
-	//c = (n == 48) ? 32 : n;
 	while (++i < n)
 	{
-		/*
-		if (n == 48)
-		{
-			tmp = (in >> (c - g[i])) & 1;
-			printf("tmp == %llx\n", r);
-		}
-		*/
 		r <<= 1;
-		/*
-		if (n == 48)
-		{
-		//	printf("reslut == %llx\n", r);
-			r += tmp;
-		}
-		*/
 		r += (in >> (n - g[i])) & 1;
 	}
 	return (r);
@@ -177,7 +156,5 @@ int				ssl_des_algo(t_ba64 *ba)
 		ssl_des_enco(msg, sk, ba, i);
 		i += 8;
 	}
-	//ba->data = ft_memalloc(sizeof(char) * len + 1);
-	//ft_memcpy(ba->data, data, sizeof(char) * len);
 	return (1);
 }
