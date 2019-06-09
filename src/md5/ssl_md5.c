@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/18 19:26:21 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/04/29 20:36:42 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/05 20:02:23 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,18 @@ int				ssl_md5_init(uint8_t *msg, size_t len, t_ssl *ssl)
 	ft_bzero(&md5, sizeof(t_md5));
 	md5_padding(msg, len, &md5);
 	md5_transform(&md5);
+	if (ssl->p_flg & SSL_DES)
+	{
+		ft_memdel((void **)&(md5.msg));
+		md5_endianfix(&md5);
+		ssl->md5[0] = md5.a0;
+		ssl->md5[0] <<= 32;
+		ssl->md5[0] += md5.b0;
+		ssl->md5[1] = md5.c0;
+		ssl->md5[1] <<= 32;
+		ssl->md5[1] += md5.d0;
+		return (1);
+	}
 	md5_print(ssl, &md5);
 	ft_memdel((void **)&(md5.msg));
 	return (0);

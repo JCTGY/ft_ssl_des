@@ -1,28 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ssl_des.c                                          :+:      :+:    :+:   */
+/*   ssl_des_output.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/05/21 19:01:21 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/05/24 19:40:32 by jchiang-         ###   ########.fr       */
+/*   Created: 2019/06/08 20:14:01 by jchiang-          #+#    #+#             */
+/*   Updated: 2019/06/08 22:11:24 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
+#include "ft_des.h"
 
-int				ssl_base64_des(int ac, char **av)
+int			ssl_des_output(t_ba64 *ba)
 {
-	t_ba64		ba;
-
-	ft_bzero(&ba, sizeof(ba));
-	if (!ssl_des_flag(&ba, ac, av, 1))
-		return (0);
-	if (!ssl_base64_std(&ba))
-		return (0);
-	if (!ba.ofd && ba.a == BA64_A)
-		ssl_base64_algo(&ba);
-	ssl_free_ba(&ba);
-	return (1);
+	ssl_des_algo(ba);
+	if (ba->a)
+	{
+		ft_strdel(&ba->msg);
+		ba->msg = (char *)ft_memalloc(sizeof(char) * ba->len + 1);
+		ft_memcpy(ba->msg, ba->data, sizeof(char) * ba->len);
+		ft_strdel(&(ba->data));
+		ssl_base64_algo(ba);
+	}
+	return (0);
 }

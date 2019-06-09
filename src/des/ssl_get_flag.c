@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/21 19:25:04 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/05/22 20:56:50 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/04 20:45:21 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,29 @@
 
 static int		ssl_stdin_key(t_ba64 *ba)
 {
-	getpass(ba->skey);
+	char		pass_veri[PASS_MAX];
+	char		*pass;
+
+	if (ba->aoe == BA64_E || !ba->aoe)
+	{
+		ft_printf("enter %s encryption password", ba->cmd);
+		pass = getpass(":");
+		ft_strcpy(ba->skey, pass);
+		ft_printf("Verifying - enter %s encryption password", ba->cmd);
+		pass = getpass(":");
+		ft_strcpy(pass_veri, pass);
+		if (ft_strcmp(ba->skey, pass_veri))
+		{
+			ft_printf("Verify failure\nbad password read\n");
+			return (0);
+		}
+	}
+	else if (ba->aoe == BA64_D)
+	{
+		ft_printf("enter %s encryption password", ba->cmd);
+		pass = getpass(":");
+		ft_strcpy(ba->skey, pass);
+	}
 	return (1);
 }
 
@@ -59,6 +81,11 @@ static int		get_ssl_arg(t_ba64 *ba, char **av, int *i)
 		ba->key = av[++*i];
 	else if (!ft_strcmp(av[*i], "-s"))
 		ba->salt = av[++*i];
+	else if (!ft_strcmp(av[*i], "-p"))
+	{
+		ft_strcpy(ba->skey, av[++*i]);
+		ba->pflag = BA64_P;
+	}
 	return (1);
 }
 
@@ -67,7 +94,7 @@ int				ssl_des_flag(t_ba64 *ba, int ac, char **av, int i)
 	while (++i < ac)
 	{
 		ba->cmd = av[1];
-		if (av[i][0] == '-' && ft_strchr("iovks", av[i][1]) && av[i][2] == '\0')
+		if (av[i][0] == '-' && ft_strchr("iovksp", av[i][1]) && av[i][2] == '\0')
 		{
 			if (!get_ssl_arg(ba, av, &i))
 				return (0);
@@ -81,7 +108,7 @@ int				ssl_des_flag(t_ba64 *ba, int ac, char **av, int i)
 		else
 			return (ba64_error(av[i], W_UKNOW));
 	}
-	if (!ba->key)
+	if (ba->key == NULL && ba->pflag != BA64_P)
 	{
 		if (!ssl_stdin_key(ba))
 			return (0);

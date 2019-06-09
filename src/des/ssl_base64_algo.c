@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/17 15:49:04 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/05/22 20:09:27 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/08 22:11:25 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,10 @@ static void			ssl_base64_encode(t_ba64 *ba, t_balgo al)
 {
 	if (ba->msg == NULL)
 		return ;
-	al.old = ft_strlen(ba->msg);
+	al.old = (!ft_strcmp(ba->cmd, "base64")) ? ft_strlen(ba->msg) : ba->len;
 	al.len = 4 * ((al.old + 2) / 3);
 	al.len = al.len + (al.len / 64) + 1;
+	ba->len = al.len;
 	ba->data = ft_strnew(al.len);
 	ssl_base64_enhelp(ba, al);
 	al.m = (al.old % 3) ? (5 - al.old % 3) : 1;

@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/17 13:06:30 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/05/22 20:35:51 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/05/24 19:49:44 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@ void			ssl_free_ba(t_ba64 *ba)
 {
 	if (!ba)
 		return ;
-	if (ba->skey)
-		ft_strdel(&ba->skey);
 	if (ba->msg)
 		ft_strdel(&ba->msg);
 	if (ba->data)
