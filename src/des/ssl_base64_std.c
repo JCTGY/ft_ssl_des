@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/17 11:01:06 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/08 22:11:21 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/10 22:15:35 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,17 +59,18 @@ static int		ssl_ba_check2(t_ba64 *ba)
 
 static void		ssl_ba_stdin(t_ba64 *ba, int fd)
 {
-	char	buff[2];
-	char	*temp;
+	char	*buff;
+	size_t	len = 0;
 
-	ba->msg = ft_strnew(1);
-	while ((read(fd, buff, 1)) > 0)
-	{
-		buff[1] = '\0';
-		temp = ba->msg;
-		ba->msg = ft_strjoin(temp, buff);
-		ft_strdel(&temp);
-	}
+	while ((read(fd, &buff, 1)) == 1)
+		len++;
+	ba->len = len;
+	close(fd);
+	if ((fd = open(ba->ifd, O_RDONLY)) == -1)
+		return ;
+	ba->msg = ft_memalloc(sizeof(char) * ba->len + 1);
+	read(fd, ba->msg, ba->len);
+	close(fd);
 }
 
 static int		ssl_ba_check(t_ba64 *ba)

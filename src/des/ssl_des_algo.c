@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/22 20:15:46 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/08 22:31:28 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/10 22:19:15 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static uint64_t			ssl_block(char *s)
 	while (++i < 8)
 	{
 		r <<= 8;
-		r += s[i];
+		r += (uint8_t)s[i];
 	}
 	return (r);
 }
@@ -82,7 +82,7 @@ static uint64_t		ssl_des_bit(uint64_t in, int n, const unsigned char *g)
 	return (r);
 }
 
-static int			ssl_des_enco(uint64_t msg, uint64_t ks[16], t_ba64 *ba, int b)
+static int			ssl_des_enco(uint64_t msg, uint64_t ks[16], t_ba64 *ba, size_t b)
 {
 	uint64_t	tmp;
 	uint64_t	l;
@@ -126,15 +126,23 @@ static void		ssl_padding(t_ba64 *ba, t_key *k, size_t old)
 		ft_memcpy(k->msg, ba->msg, old);
 		ft_memset(k->msg + old, len - old, len - old);
 	}
+	else if (!ft_strncmp(ba->msg, "Salted__", 8))
+	{
+		ba->len = ba->len - 16;
+		k->msg = ft_strnew(ba->len);
+		ft_memcpy(k->msg, ba->msg + 16, ba->len);
+	}
 	else
-		ba->len = ft_strlen(ba->msg) - 16;
+	{
+		k->msg = ft_strnew(ba->len);
+		ft_memcpy(k->msg, ba->msg, ba->len);
+	}
 }
 
 int				ssl_des_algo(t_ba64 *ba)
 {
 	t_key		k;
-	int			i;
-	int			len;
+	size_t		i;
 	uint64_t	sk[16];
 	uint64_t	msg;
 
@@ -145,14 +153,14 @@ int				ssl_des_algo(t_ba64 *ba)
 		return (0);
 	}
 	ssl_generate_key(ba, &k);
-	ssl_padding(ba, &k, ft_strlen(ba->msg));
+	ssl_padding(ba, &k, ba->len);
 	ssl_shift_key(ba, &k, sk);
-	len = ft_strlen(k.msg);
-	ba->data = (char *)ft_memalloc(sizeof(char) * len + 1);
+	ba->data = (char *)ft_memalloc(sizeof(char) * ba->len + 1);
 	i = 0;
-	while (i < len)
+	while (i < ba->len)
 	{
 		msg = ssl_block(k.msg + i);
+		//printf("rr === %llx\n", msg);
 		ssl_des_enco(msg, sk, ba, i);
 		i += 8;
 	}

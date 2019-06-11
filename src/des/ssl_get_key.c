@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/04 17:58:04 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/08 22:31:27 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/10 22:13:24 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ int					ssl_shift_key(t_ba64 *ba, t_key *k, uint64_t sk[16])
 	uint64_t	r;
 	uint64_t	kc[16];
 	uint64_t	kd[16];
+	int			d;
 	int			i;
 	int			b;
 
@@ -69,6 +70,7 @@ int					ssl_shift_key(t_ba64 *ba, t_key *k, uint64_t sk[16])
 	des_half_key(kd, (temp >> 8) & 0xFFFFFFF);
 	while (++i < 16)
 	{
+		d = (ba->aoe == BA64_D) ? 15 - i : i;
 		temp = (kc[i] << 28) + kd[i];
 		r = 0;
 		b = -1;
@@ -77,16 +79,15 @@ int					ssl_shift_key(t_ba64 *ba, t_key *k, uint64_t sk[16])
 			r <<= 1;
 			r += ((temp >> (56 - g_des_pc2[b])) & 1);
 		}
-		sk[i] = r;
+		sk[d] = r;
 	}
-	if (ba->aoe == BA64_D)
-		ft_printf("heeelol\n");
 	return (0);
 }
 
 static void			calculate_key(t_ba64 *ba, t_key *k)
 {
 	t_ssl		ssl;
+	size_t		len;
 	char		*temp;
 
 	ft_bzero(&ssl, sizeof(ssl));
@@ -98,8 +99,11 @@ static void			calculate_key(t_ba64 *ba, t_key *k)
 	else
 	{
 		ssl.p_flg |= SSL_DES;
-		temp = ft_strnew(ft_strlen(ba->skey));
+		len = (ba->salt) ? ft_strlen(ba->skey) + 8 : ft_strlen(ba->skey);
+		temp = ft_strnew(len);
 		ft_strcpy(temp, ba->skey);
+		if (ba->salt)
+			ft_memcpy(temp + ft_strlen(ba->skey), ba->salt, 8);
 		ssl_md5_init((uint8_t *)temp, ft_strlen(ba->skey), &ssl);
 		ft_memcpy(k->key, &ssl.md5[0], sizeof(ssl.md5[0]));
 		ft_memcpy(k->iv, &ssl.md5[1], sizeof(ssl.md5[1]));
