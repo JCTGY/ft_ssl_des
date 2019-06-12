@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/22 20:16:23 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/11 20:39:44 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/12 11:02:34 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,10 @@ typedef struct			s_vai
 
 typedef struct			s_key
 {
+	char				*msg;
 	unsigned char		salt[8];
 	unsigned char		key[8];
 	unsigned char		iv[8];
-	char				*msg;
 }						t_key;
 
 int						ssl_generate_key(t_ba64 *ba, t_key *k);

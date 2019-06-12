@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/04 17:58:04 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/11 20:47:57 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/12 11:37:06 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,6 @@ int					ssl_shift_key(t_ba64 *ba, t_key *k, uint64_t sk[16])
 
 	i = -1;
 	temp = (*(uint64_t *)k->key);
-	printf("temp == %llx\n", temp);
 	temp = des_pc1(temp);
 	des_half_key(kc, (temp >> 36) & 0xFFFFFFF);
 	des_half_key(kd, (temp >> 8) & 0xFFFFFFF);
@@ -104,6 +103,8 @@ static void			calculate_key(t_ba64 *ba, t_key *k)
 		ft_strcpy(temp, ba->skey);
 		if ((ba->aoe != BA64_D && !ba->key) || !(ft_strncmp(ba->msg, "Salted__", 8)))
 			ft_memcpy(temp + ft_strlen(ba->skey), k->salt, 8);
+		write(1, temp, 16);
+		printf("\n");
 		ssl_md5_init((uint8_t *)temp, len, &ssl);
 		ft_memcpy(k->key, &ssl.md5[0], sizeof(ssl.md5[0]));
 		ft_memcpy(k->iv, &ssl.md5[1], sizeof(ssl.md5[1]));
