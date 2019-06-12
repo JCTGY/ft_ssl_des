@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/22 20:15:46 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/10 22:19:15 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/11 21:02:32 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,6 +139,19 @@ static void		ssl_padding(t_ba64 *ba, t_key *k, size_t old)
 	}
 }
 
+void			ssl_allocate_data(t_ba64 *ba, t_key *k)
+{
+	if (ba->aoe != BA64_D && !ba->key)
+	{
+		ba->len += 16;
+		ba->data = (char *)ft_memalloc(sizeof(char) * ba->len + 1);
+		ft_memcpy(ba->data, "Salted__", 8);
+		ft_memcpy(ba->data + 8, k->salt, 8);
+	}
+	else
+		ba->data = (char *)ft_memalloc(sizeof(char) * ba->len + 1);
+}
+
 int				ssl_des_algo(t_ba64 *ba)
 {
 	t_key		k;
@@ -155,14 +168,14 @@ int				ssl_des_algo(t_ba64 *ba)
 	ssl_generate_key(ba, &k);
 	ssl_padding(ba, &k, ba->len);
 	ssl_shift_key(ba, &k, sk);
-	ba->data = (char *)ft_memalloc(sizeof(char) * ba->len + 1);
-	i = 0;
+	ssl_allocate_data(ba, &k);
+	i = (ba->aoe != BA64_D && !ba->key) ? 15 : 0;
 	while (i < ba->len)
 	{
 		msg = ssl_block(k.msg + i);
-		//printf("rr === %llx\n", msg);
 		ssl_des_enco(msg, sk, ba, i);
 		i += 8;
 	}
+	write(1, ba->data, ba->len);
 	return (1);
 }

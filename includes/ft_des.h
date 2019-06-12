@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/22 20:16:23 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/07 15:02:53 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/11 20:39:44 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ typedef struct			s_key
 }						t_key;
 
 int						ssl_generate_key(t_ba64 *ba, t_key *k);
-int						ssl_hex_to_by(char *salt, t_key *k, int va);
+int						ssl_hex_to_by(uint8_t *salt, t_key *k, int va);
 int						ssl_shift_key(t_ba64 *ba, t_key *k, uint64_t sk[16]);
 int						decode_salt(t_ba64 *ba, t_key *k);
 

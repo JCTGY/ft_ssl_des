@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/08 20:14:01 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/10 22:15:54 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/11 09:04:37 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,12 @@
 int			ssl_des_output(t_ba64 *ba)
 {
 	ssl_des_algo(ba);
-	ba->len = (ba->salt && ba->aoe != BA64_D) ? ba->len + 16 : ba->len;
 	if (ba->a)
 	{
 		ft_strdel(&ba->msg);
 		ba->msg = (char *)ft_memalloc(sizeof(char) * ba->len + 1);
 		if (ba->salt && ba->aoe != BA64_D)
-		{
-			ft_memcpy(ba->msg, "Salted__", 8);
-			ft_memcpy(ba->msg + 8, ba->salt, 8);
-			ft_memcpy(ba->msg + 16, ba->data, sizeof(char) * ba->len - 16);
-		}
+			ft_memcpy(ba->msg + 16, ba->data, sizeof(char) * ba->len);
 		else
 			ft_memcpy(ba->msg, ba->data, sizeof(char) * ba->len);
 		ft_strdel(&(ba->data));

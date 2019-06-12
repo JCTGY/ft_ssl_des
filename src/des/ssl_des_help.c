@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/05 12:53:40 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/06 10:57:55 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/11 21:14:07 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,33 +34,41 @@ static int		change_hex(char s1, char s2, t_key *k, t_vai v)
 	else if (s2 >= '0' && s2 <= '9')
 		temp += s2 - '0';
 	if (v.va == I_SALT)
-		k->salt[v.i] = temp;
+	{
+		k->salt[v.i] = (uint8_t)temp;
+		printf("temp == %x\n", temp);
+	}
 	else if (v.va == I_KEY)
+	{
 		k->key[v.i] = temp;
+		printf("key == %x\n", temp);
+	}
 	else if (v.va == I_IV)
 		k->iv[v.i] = temp;
 	return (1);
 }
 
-int				ssl_hex_to_by(char *hex, t_key *k, int va)
+int				ssl_hex_to_by(uint8_t *hex, t_key *k, int va)
 {
 	t_vai		v;
 
-	v.i = -1;
+	printf("hex salt == %s\n", hex);
+	v.i = 7;
 	v.va = va;
-	while (++v.i < 8)
+	while (v.i >= 0)
 	{
-		if (!change_hex(hex[v.i * 2], hex[v.i * 2 + 1], k, v))
+		if (!change_hex(hex[(7 - v.i) * 2], hex[(7 - v.i) * 2 + 1], k, v))
 			break ;
+		v.i--;
 	}
-	while (v.i < 8)
+	while (v.i >= 0)
 	{
 		if (va == I_SALT)
-			k->salt[v.i++] = 0;
+			k->salt[v.i--] = 0;
 		else if (va == I_KEY)
-			k->key[v.i++] = 0;
+			k->key[v.i--] = 0;
 		else if (va == I_IV)
-			k->iv[v.i++] = 0;
+			k->iv[v.i--] = 0;
 	}
 	return (0);
 }
@@ -69,7 +77,6 @@ int				decode_salt(t_ba64 *ba, t_key *k)
 {
 	if (!ft_strncmp(ba->msg, "Salted__", 8))
 	{
-	//	k->salt = (char *)malloc(sizeof(char) * 8 + 1);
 		ft_memcpy(k->salt, ba->msg + 8, 8);
 		k->msg = ft_strdup(&(*(ba->msg + 16)));
 		return (0);

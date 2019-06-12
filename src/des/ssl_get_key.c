@@ -6,13 +6,12 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/04 17:58:04 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/10 22:13:24 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/11 20:47:57 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
 #include "ft_des.h"
-#include "ft_sha512.h"
 
 static void			des_half_key(uint64_t kh[16], uint64_t k0)
 {
@@ -63,8 +62,8 @@ int					ssl_shift_key(t_ba64 *ba, t_key *k, uint64_t sk[16])
 	int			b;
 
 	i = -1;
-	temp = (ba->key) ? swap_64bit(*(uint64_t *)k->key)
-		: (*(uint64_t *)k->key);
+	temp = (*(uint64_t *)k->key);
+	printf("temp == %llx\n", temp);
 	temp = des_pc1(temp);
 	des_half_key(kc, (temp >> 36) & 0xFFFFFFF);
 	des_half_key(kd, (temp >> 8) & 0xFFFFFFF);
@@ -93,18 +92,19 @@ static void			calculate_key(t_ba64 *ba, t_key *k)
 	ft_bzero(&ssl, sizeof(ssl));
 	if (ba->key)
 	{
-		ssl_hex_to_by(ba->key, k, I_KEY);
-		ssl_hex_to_by(ba->iv, k, I_IV);
+		ssl_hex_to_by((uint8_t *)ba->key, k, I_KEY);
+		ssl_hex_to_by((uint8_t *)ba->iv, k, I_IV);
 	}
 	else
 	{
 		ssl.p_flg |= SSL_DES;
-		len = (ba->salt) ? ft_strlen(ba->skey) + 8 : ft_strlen(ba->skey);
+		len = ((ba->aoe != BA64_D && !ba->key) || !(ft_strncmp(ba->msg, "Salted__", 8)))
+				? ft_strlen(ba->skey) + 8 : ft_strlen(ba->skey);
 		temp = ft_strnew(len);
 		ft_strcpy(temp, ba->skey);
-		if (ba->salt)
-			ft_memcpy(temp + ft_strlen(ba->skey), ba->salt, 8);
-		ssl_md5_init((uint8_t *)temp, ft_strlen(ba->skey), &ssl);
+		if ((ba->aoe != BA64_D && !ba->key) || !(ft_strncmp(ba->msg, "Salted__", 8)))
+			ft_memcpy(temp + ft_strlen(ba->skey), k->salt, 8);
+		ssl_md5_init((uint8_t *)temp, len, &ssl);
 		ft_memcpy(k->key, &ssl.md5[0], sizeof(ssl.md5[0]));
 		ft_memcpy(k->iv, &ssl.md5[1], sizeof(ssl.md5[1]));
 		ft_strdel(&temp);
@@ -113,10 +113,10 @@ static void			calculate_key(t_ba64 *ba, t_key *k)
 	
 int					ssl_generate_key(t_ba64 *ba, t_key *k)
 {
-	if (!ba->salt && (ba->aoe == BA64_E || !ba->aoe))
+	if (!ba->salt && (ba->aoe == BA64_E || !ba->aoe) && !ba->key)
 		getentropy(k->salt, 8);
 	else if (ba->salt && (ba->aoe == BA64_E || !ba->aoe))
-		ssl_hex_to_by(ba->salt, k, I_SALT);
+		ssl_hex_to_by((uint8_t *)ba->salt, k, I_SALT);
 	else if (ba->aoe == BA64_D)
 		decode_salt(ba, k);
 	calculate_key(ba, k);
