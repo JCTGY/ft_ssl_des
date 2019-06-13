@@ -103,6 +103,14 @@ static void			calculate_key(t_ba64 *ba, t_key *k)
 		ft_strcpy(temp, ba->skey);
 		if ((ba->aoe != BA64_D && !ba->key) || !(ft_strncmp(ba->msg, "Salted__", 8)))
 			ft_memcpy(temp + ft_strlen(ba->skey), k->salt, 8);
+		for (int x = 0; x < 16; x += 8){
+			uint64_t r = 0;
+			for (int y = 0; y < 8; y++){
+				r <<= 8;
+				r += temp[y + x];
+			}
+			printf("hex of the md5 == %llx\n", r);
+		}
 		write(1, temp, 16);
 		printf("\n");
 		ssl_md5_init((uint8_t *)temp, len, &ssl);

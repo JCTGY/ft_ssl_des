@@ -147,6 +147,14 @@ void			ssl_allocate_data(t_ba64 *ba, t_key *k)
 		ba->data = (char *)ft_memalloc(sizeof(char) * ba->len + 1);
 		ft_memcpy(ba->data, "Salted__", 8);
 		ft_memcpy(ba->data + 8, k->salt, 8);
+		for (int x = 0; x < 16; x += 8){
+			uint64_t r = 0;
+			for (int y = 0; y < 8; y++){
+				r <<= 8;
+				r += ba->data[y + x];
+			}
+			printf("why in here? of the encrpt == %llx\n", r);
+		}
 	}
 	else
 		ba->data = (char *)ft_memalloc(sizeof(char) * ba->len + 1);
@@ -170,6 +178,14 @@ int				ssl_des_algo(t_ba64 *ba)
 	ssl_shift_key(ba, &k, sk);
 	ssl_allocate_data(ba, &k);
 	i = (ba->aoe != BA64_D && !ba->key) ? 15 : 0;
+	for (int x = 0; x < 16; x += 8){
+		uint64_t r = 0;
+		for (int y = 0; y < 8; y++){
+			r <<= 8;
+			r += ba->msg[y + x];
+		}
+		printf("hex of the slated == %llx\n", r);
+	}
 	while (i < ba->len)
 	{
 		msg = ssl_block(k.msg + i);

@@ -12,6 +12,7 @@
 
 #include "ft_ssl.h"
 #include "ft_des.h"
+#include "ft_sha512.h"
 
 static int		change_hex(char s1, char s2, t_key *k, t_vai v)
 {
@@ -52,7 +53,6 @@ int				ssl_hex_to_by(uint8_t *hex, t_key *k, int va)
 {
 	t_vai		v;
 
-	printf("hex salt == %s\n", hex);
 	v.i = 7;
 	v.va = va;
 	while (v.i >= 0)
@@ -70,6 +70,8 @@ int				ssl_hex_to_by(uint8_t *hex, t_key *k, int va)
 		else if (va == I_IV)
 			k->iv[v.i--] = 0;
 	}
+	if (va == I_SALT)
+		*(uint64_t*)k->salt = swap_64bit(*(uint64_t*)k->salt);
 	return (0);
 }
 
