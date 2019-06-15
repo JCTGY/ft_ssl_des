@@ -6,13 +6,21 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/05 12:53:40 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/11 21:14:07 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/14 22:54:39 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
 #include "ft_des.h"
 #include "ft_sha512.h"
+
+void			ssl_free_k(t_key *k)
+{
+	ft_memdel((void *)&k->msg);
+	ft_memdel((void *)&k->key);
+	ft_memdel((void *)&k->salt);
+	ft_memdel((void *)&k->iv);
+}
 
 static int		change_hex(char s1, char s2, t_key *k, t_vai v)
 {
@@ -35,15 +43,9 @@ static int		change_hex(char s1, char s2, t_key *k, t_vai v)
 	else if (s2 >= '0' && s2 <= '9')
 		temp += s2 - '0';
 	if (v.va == I_SALT)
-	{
-		k->salt[v.i] = (uint8_t)temp;
-		printf("temp == %x\n", temp);
-	}
+		k->salt[v.i] = temp;
 	else if (v.va == I_KEY)
-	{
 		k->key[v.i] = temp;
-		printf("key == %x\n", temp);
-	}
 	else if (v.va == I_IV)
 		k->iv[v.i] = temp;
 	return (1);
@@ -77,10 +79,10 @@ int				ssl_hex_to_by(uint8_t *hex, t_key *k, int va)
 
 int				decode_salt(t_ba64 *ba, t_key *k)
 {
-	if (!ft_strncmp(ba->msg, "Salted__", 8))
+	if (!ft_strncmp((char *)ba->msg, "Salted__", 8))
 	{
 		ft_memcpy(k->salt, ba->msg + 8, 8);
-		k->msg = ft_strdup(&(*(ba->msg + 16)));
+		k->msg = ft_strdup(&(*((char *)ba->msg + 16)));
 		return (0);
 	}
 	return (1);

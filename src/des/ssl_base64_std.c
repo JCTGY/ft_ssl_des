@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/17 11:01:06 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/10 22:15:35 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/14 19:39:52 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,14 @@ static void		ssl_get_stdin(t_ba64 *ba)
 	char	*temp;
 	int		ret;
 
-	ba->msg = ft_strnew(1);
+	ba->msg = ft_memalloc(sizeof(uint8_t));
 	while ((ret = (read(0, buff, 1))) > 0)
 	{
 		if (ret == 0)
 			break ;
 		buff[1] = '\0';
-		temp = ba->msg;
-		ba->msg = ft_strjoin(temp, buff);
+		temp = (char*)ba->msg;
+		ba->msg = (uint8_t*)ft_strjoin(temp, buff);
 		ft_strdel(&temp);
 	}
 }
@@ -48,11 +48,13 @@ static int		ssl_ba_check2(t_ba64 *ba)
 			ft_printf("%s is a directory\n", ba->ofd);
 		return (-1);
 	}
-	if (!ft_strcmp(ba->cmd, "base64"))
+	if (!ft_strcmp(ba->cmd, "base64") || (!ft_strcmp(ba->cmd, "2nd64")))
+	{
 		ssl_base64_algo(ba);
+		write(fd, ba->data, ba->len);
+	}
 	else 
-		ssl_des_output(ba);
-	write(fd, ba->data, ba->len);
+		ssl_des_output(ba, fd);
 	close(fd);
 	return (1);
 }
@@ -64,12 +66,13 @@ static void		ssl_ba_stdin(t_ba64 *ba, int fd)
 
 	while ((read(fd, &buff, 1)) == 1)
 		len++;
-	ba->len = len;
 	close(fd);
 	if ((fd = open(ba->ifd, O_RDONLY)) == -1)
 		return ;
-	ba->msg = ft_memalloc(sizeof(char) * ba->len + 1);
-	read(fd, ba->msg, ba->len);
+	ba->len = (ba->aoe == BA64_D && ba->a)
+		? ba->len : len;
+	ba->msg = ft_memalloc(sizeof(char) * len + 1);
+	read(fd, ba->msg, len);
 	close(fd);
 }
 

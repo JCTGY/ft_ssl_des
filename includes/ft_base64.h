@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/17 15:55:18 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/05/21 14:02:25 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/14 16:16:05 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ typedef struct				s_balgo
 	uint32_t				tc;
 	uint32_t				td;
 	uint32_t				al;
+	uint8_t					tmp;
 	int						c;
 	int						x;
 	int						y;
@@ -93,5 +94,6 @@ typedef struct				s_index
 
 int							ssl_base64_reline(t_ba64 *ba, int len);
 int							check_base64(char *msg);
+uint8_t						ssl_base64_deta(uint8_t c);
 
 #endif

@@ -6,42 +6,44 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/17 15:49:04 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/08 22:11:25 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/14 22:05:16 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_base64.h"
 #include "ft_ssl.h"
 
-static void			ssl_base64_dchelp(t_ba64 *ba, t_balgo al)
+static int			ssl_base64_dchelp(t_ba64 *ba, t_balgo al)
 {
 	while (al.x < al.old)
 	{
-		al.ta = (ba->msg[al.x] == '=') ?
-			0 & al.x++ : g_base64_decd[(int)ba->msg[al.x++]];
-		al.tb = (ba->msg[al.x] == '=') ?
-			0 & al.x++ : g_base64_decd[(int)ba->msg[al.x++]];
-		al.tc = (ba->msg[al.x] == '=') ?
-			0 & al.x++ : g_base64_decd[(int)ba->msg[al.x++]];
-		al.td = (ba->msg[al.x] == '=') ?
-			0 & al.x++ : g_base64_decd[(int)ba->msg[al.x++]];
-		al.al = (al.ta << 18) + (al.tb << 12) + (al.tc << 6) + (al.td);
-		ba->data[al.y++] = ((al.al >> 2 * 8) & 127);
-		ba->data[al.y++] = ((al.al >> 1 * 8) & 127);
-		ba->data[al.y++] = ((al.al >> 0 * 8) & 127);
+		ba->data[al.y] = ssl_base64_deta(ba->msg[al.x++]) << 2;
+		al.tmp = ssl_base64_deta(ba->msg[al.x++]);
+		ba->data[al.y++] += (al.tmp >> 4) & 3;
+		ba->data[al.y] = (al.tmp & 15) << 4;
+		al.tmp = ssl_base64_deta(ba->msg[al.x++]);
+		ba->data[al.y++] += (al.tmp >> 2) & 15;
+		ba->data[al.y] = (al.tmp & 3) << 6;
+		ba->data[al.y++] += ssl_base64_deta(ba->msg[al.x++]) & 63;
 	}
+	if ((ba->msg[al.x - 1] == '=') && (ba->msg[al.x - 2] == '='))
+		ba->data[--al.y] = 0;
+	if (ba->msg[al.x - 1] == '=')
+		ba->data[--al.y] = 0;
+	return (al.y);
 }
 
 static int			ssl_base64_decode(t_ba64 *ba, t_balgo al)
 {
-	if (!ssl_base64_reline(ba, ft_strlen(ba->msg)) ||
-			(!check_base64(ba->msg)) || (ft_strlen(ba->msg) % 4))
+
+	if (!ssl_base64_reline(ba, ft_strlen((char*)ba->msg)) ||
+			(!check_base64((char*)ba->msg)) || (ft_strlen((char*)ba->msg) % 4))
 		return (dis_error(NULL, N_BASE64, 0, "data"));
-	al.old = ft_strlen(ba->msg);
+	al.old = (!ba->len) ? ft_strlen((char *)ba->msg) : ba->len;
 	al.len = 3 * (al.old / 4);
-	ba->data = ft_strnew(al.len);
-	ssl_base64_dchelp(ba, al);
-	ba->data[al.len] = '\0';
+	ba->data = ft_memalloc(sizeof(uint8_t) * al.len + 1);
+	ba->len = ssl_base64_dchelp(ba, al);
+	ba->data[ba->len] = '\0';
 	return (1);
 }
 
@@ -69,11 +71,11 @@ static void			ssl_base64_encode(t_ba64 *ba, t_balgo al)
 {
 	if (ba->msg == NULL)
 		return ;
-	al.old = (!ft_strcmp(ba->cmd, "base64")) ? ft_strlen(ba->msg) : ba->len;
+	al.old = (!ft_strcmp(ba->cmd, "base64")) ? ft_strlen((char *)ba->msg) : ba->len;
 	al.len = 4 * ((al.old + 2) / 3);
 	al.len = al.len + (al.len / 64) + 1;
 	ba->len = al.len;
-	ba->data = ft_strnew(al.len);
+	ba->data = ft_memalloc(sizeof(uint8_t) * al.len + 1);
 	ssl_base64_enhelp(ba, al);
 	al.m = (al.old % 3) ? (5 - al.old % 3) : 1;
 	while (--al.m)
@@ -90,7 +92,7 @@ int					ssl_base64_algo(t_ba64 *ba)
 		ssl_base64_encode(ba, al);
 	if (ba->aoe == BA64_D)
 		ssl_base64_decode(ba, al);
-	if (!ba->ofd)
-		ft_printf("%s", ba->data);
+	if (!ba->ofd && !ft_strcmp(ba->cmd, "base64"))
+		write(1, ba->data, ba->len);
 	return (0);
 }

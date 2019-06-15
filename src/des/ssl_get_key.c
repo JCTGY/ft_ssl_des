@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/04 17:58:04 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/12 11:37:06 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/14 21:27:15 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ static void			calculate_key(t_ba64 *ba, t_key *k)
 {
 	t_ssl		ssl;
 	size_t		len;
-	char		*temp;
+	uint8_t		*temp;
 
 	ft_bzero(&ssl, sizeof(ssl));
 	if (ba->key)
@@ -97,26 +97,16 @@ static void			calculate_key(t_ba64 *ba, t_key *k)
 	else
 	{
 		ssl.p_flg |= SSL_DES;
-		len = ((ba->aoe != BA64_D && !ba->key) || !(ft_strncmp(ba->msg, "Salted__", 8)))
+		len = ((ba->aoe != BA64_D && !ba->key) || !(ft_strncmp((char *)ba->msg, "Salted__", 8)))
 				? ft_strlen(ba->skey) + 8 : ft_strlen(ba->skey);
-		temp = ft_strnew(len);
-		ft_strcpy(temp, ba->skey);
-		if ((ba->aoe != BA64_D && !ba->key) || !(ft_strncmp(ba->msg, "Salted__", 8)))
+		temp = ft_memalloc(sizeof(*temp) * len + 1);
+		ft_memcpy(temp, ba->skey, 8);
+		if ((ba->aoe != BA64_D && !ba->key) || !(ft_strncmp((char *)ba->msg, "Salted__", 8)))
 			ft_memcpy(temp + ft_strlen(ba->skey), k->salt, 8);
-		for (int x = 0; x < 16; x += 8){
-			uint64_t r = 0;
-			for (int y = 0; y < 8; y++){
-				r <<= 8;
-				r += temp[y + x];
-			}
-			printf("hex of the md5 == %llx\n", r);
-		}
-		write(1, temp, 16);
-		printf("\n");
 		ssl_md5_init((uint8_t *)temp, len, &ssl);
 		ft_memcpy(k->key, &ssl.md5[0], sizeof(ssl.md5[0]));
 		ft_memcpy(k->iv, &ssl.md5[1], sizeof(ssl.md5[1]));
-		ft_strdel(&temp);
+		ft_memdel((void *)&temp);
 	}
 }
 	

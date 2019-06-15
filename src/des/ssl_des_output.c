@@ -6,26 +6,42 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/08 20:14:01 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/11 09:04:37 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/14 21:25:35 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
 #include "ft_des.h"
 
-int			ssl_des_output(t_ba64 *ba)
+static void		ssl_re_output(t_ba64 *ba, int fd)
 {
-	ssl_des_algo(ba);
-	if (ba->a)
+	close(fd);
+	ba->a = 0;
+	ba->len += 16;
+	ba->ifd = ba->ofd;
+	ba->cmd = ft_strdup("2nd64");
+	ssl_base64_std(ba);
+}
+
+int			ssl_des_output(t_ba64 *ba, int fd)
+{
+	t_key		k;
+
+	ft_bzero(&k, sizeof(k));
+	if (ba->aoe == BA64_D && ba->a)
 	{
-		ft_strdel(&ba->msg);
-		ba->msg = (char *)ft_memalloc(sizeof(char) * ba->len + 1);
-		if (ba->salt && ba->aoe != BA64_D)
-			ft_memcpy(ba->msg + 16, ba->data, sizeof(char) * ba->len);
-		else
-			ft_memcpy(ba->msg, ba->data, sizeof(char) * ba->len);
-		ft_strdel(&(ba->data));
 		ssl_base64_algo(ba);
+		ssl_swap_data(ba);
 	}
+	ssl_des_algo(ba, &k);
+	if (ba->aoe != BA64_D)
+	{
+		write(fd, "Salted__", 8);
+		write(fd, k.salt, 8);
+	}	
+	write(fd, ba->data, ba->len);
+	if (ba->aoe != BA64_D && ft_strcmp(ba->cmd, "base64") && ba->a)
+		ssl_re_output(ba, fd);
+	ssl_free_k(&k);
 	return (0);
 }

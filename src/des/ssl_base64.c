@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/17 13:06:30 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/05/24 19:49:44 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/14 22:02:07 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@ void			ssl_free_ba(t_ba64 *ba)
 	if (!ba)
 		return ;
 	if (ba->msg)
-		ft_strdel(&ba->msg);
+		ft_memdel((void*)&ba->msg);
 	if (ba->data)
-		ft_strdel(&ba->data);
+		ft_memdel((void*)&ba->data);
 }
 
 static int		ssl_base64_flag(t_ba64 *ba, int ac, char **av, int i)

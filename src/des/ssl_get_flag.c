@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/21 19:25:04 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/04 20:45:21 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/13 10:47:40 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,11 +76,11 @@ static int		get_ssl_arg(t_ba64 *ba, char **av, int *i)
 	else if (!ft_strcmp(av[*i], "-o"))
 		ba->ofd = av[++*i];
 	else if (!ft_strcmp(av[*i], "-v"))
-		ba->iv = av[++*i];
+		ba->iv = (uint8_t *)av[++*i];
 	else if (!ft_strcmp(av[*i], "-k"))
-		ba->key = av[++*i];
+		ba->key = (uint8_t *)av[++*i];
 	else if (!ft_strcmp(av[*i], "-s"))
-		ba->salt = av[++*i];
+		ba->salt = (uint8_t *)av[++*i];
 	else if (!ft_strcmp(av[*i], "-p"))
 	{
 		ft_strcpy(ba->skey, av[++*i]);

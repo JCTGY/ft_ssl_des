@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/16 18:09:02 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/08 20:23:05 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/14 22:14:48 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,17 +63,27 @@ typedef struct			s_ba64
 	int					aoe;
 	int					a;
 	int					pflag;
+	int					cbc;
 	size_t				len;
-	char				*key;
-	char				skey[PASS_MAX];
-	char				*iv;
-	char				*salt;
+	uint8_t				*key;
+	uint8_t				*iv;
+	uint8_t				*salt;
+	uint8_t				*msg;
+	uint8_t				*data;
 	char				*ifd;
 	char				*ofd;
-	char				*msg;
-	char				*data;
 	char				*cmd;
+	char				skey[PASS_MAX];
+	uint64_t			last;
 }						t_ba64;
+
+typedef struct			s_key
+{
+	char				*msg;
+	uint8_t				*salt;
+	uint8_t				*key;
+	uint8_t				*iv;
+}						t_key;
 
 typedef struct			s_hash
 {
@@ -99,10 +109,14 @@ int						ssl_base64(int ac, char **av);
 int						ssl_base64_des(int ac, char **av);
 int						ssl_base64_std(t_ba64 *ba);
 int						ssl_base64_algo(t_ba64 *ba);
-int						ssl_des_algo(t_ba64 *ba);
+int						ssl_des_algo(t_ba64 *ba, t_key *k);
 int						ssl_des_flag(t_ba64 *ba, int ac, char **av, int i);
-int						ssl_des_output(t_ba64 *ba);
+int						ssl_des_output(t_ba64 *ba, int fd);
+int						ssl_des_enco(uint64_t msg, uint64_t ks[16], t_ba64 *ba, size_t b);
+uint64_t				ssl_block(char *s);
+void					ssl_free_k(t_key *k);
 void					del_str(t_ssl *ssl);
+void					ssl_swap_data(t_ba64 *ba);
 void					display_usage(void);
 void					ssl_free_ba(t_ba64 *ba);
 
