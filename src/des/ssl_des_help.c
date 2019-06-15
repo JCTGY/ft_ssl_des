@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/05 12:53:40 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/14 22:54:39 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/15 10:53:39 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,32 +22,38 @@ void			ssl_free_k(t_key *k)
 	ft_memdel((void *)&k->iv);
 }
 
-static int		change_hex(char s1, char s2, t_key *k, t_vai v)
+static uint8_t	change_hex_help(char s1)
+{
+	if (s1 >= 'a' && s1 <= 'f')
+		return (s1 - 'a' + 10);
+	else if (s1 >= 'A' && s1 <= 'F')
+		return (s1 - 'A' + 10);
+	else if (s1 >= '0' && s1 <= '9')
+		return (s1 - '0');
+	else if (s1 == '\0')
+		return (0);
+	return (-1);
+}
+
+static int		change_hex(char s1, char s2, t_key *k, t_vai *v)
 {
 	uint8_t		temp;
 
-	temp = 0;
-	if (s1 >= 'a' && s1 <= 'f')
-		temp = s1 - 'a' + 10;
-	else if (s1 >= 'A' && s1 <= 'F')
-		temp = s1 - 'A' + 10;
-	else if (s1 >= '0' && s1 <= '9')
-		temp = s1 - '0';
-	else if (s1 == '\0' || s2 == '\0')
+	if (!(temp = change_hex_help(s1)))
 		return (0);
 	temp <<= 4;
-	if (s2 >= 'a' && s2 <= 'f')
-		temp += s2 - 'a' + 10;
-	else if (s2 >= 'A' && s2 <= 'F')
-		temp += s2 - 'A' + 10;
-	else if (s2 >= '0' && s2 <= '9')
-		temp += s2 - '0';
-	if (v.va == I_SALT)
-		k->salt[v.i] = temp;
-	else if (v.va == I_KEY)
-		k->key[v.i] = temp;
-	else if (v.va == I_IV)
-		k->iv[v.i] = temp;
+	temp += change_hex_help(s2);
+	if (v->va == I_SALT)
+		k->salt[v->i] = temp;
+	else if (v->va == I_KEY)
+		k->key[v->i] = temp;
+	else if (v->va == I_IV)
+		k->iv[v->i] = temp;
+	if (!change_hex_help(s2))
+	{
+		v->i--;
+		return (0);
+	}
 	return (1);
 }
 
@@ -59,7 +65,7 @@ int				ssl_hex_to_by(uint8_t *hex, t_key *k, int va)
 	v.va = va;
 	while (v.i >= 0)
 	{
-		if (!change_hex(hex[(7 - v.i) * 2], hex[(7 - v.i) * 2 + 1], k, v))
+		if (!change_hex(hex[(7 - v.i) * 2], hex[(7 - v.i) * 2 + 1], k, &v))
 			break ;
 		v.i--;
 	}
@@ -74,6 +80,8 @@ int				ssl_hex_to_by(uint8_t *hex, t_key *k, int va)
 	}
 	if (va == I_SALT)
 		*(uint64_t*)k->salt = swap_64bit(*(uint64_t*)k->salt);
+	printf("key == %llx\n", *(uint64_t*)k->key);
+	printf("iv == %llx\n", *(uint64_t*)k->iv);
 	return (0);
 }
 
