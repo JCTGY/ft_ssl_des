@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/22 20:15:46 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/14 22:45:49 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/15 10:53:33 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,25 +53,21 @@ static int				ssl_des_init(t_ba64 *ba, t_key *k)
 	uint64_t	sk[16];
 	uint64_t	msg;
 
-	if (ba->key && !ba->iv)
-	{
-		ft_putstr("iv undefined\n");
-		return (0);
-	}
-	ssl_allocate_k(k);
-	ssl_generate_key(ba, k);
 	ssl_padding(ba, k, ba->len);
 	ssl_shift_key(ba, k, sk);
-	if (ba->cbc && ba->aoe != BA64_D)
+	if (ba->ct)
 		ba->last = *(uint64_t *)k->iv;
 	ba->data = (uint8_t *)ft_memalloc(sizeof(uint8_t) * ba->len + 1);
 	m = 0;
+	ba->ct |= (!m && ba->ct) ? DES_C1 : 0;
 	while (m < ba->len)
 	{
 		msg = ssl_block(k->msg + m);
-		if (ba->cbc && ba->aoe != BA64_D)
+		if (ba->ct && ba->aoe != BA64_D)
 			msg ^= ba->last;
 		ssl_des_enco(msg, sk, ba, m);
+		if (ba->ct && ba->aoe == BA64_D)
+			ba->last = msg;
 		m += 8;
 	}
 	return (1);
@@ -79,8 +75,15 @@ static int				ssl_des_init(t_ba64 *ba, t_key *k)
 
 int				ssl_des_algo(t_ba64 *ba, t_key *k)
 {
+	if (ba->key && !ba->iv)
+	{
+		ft_putstr("iv undefined\n");
+		return (0);
+	}
 	if (!ft_strcmp(ba->cmd, "des-cbc") || !ft_strcmp(ba->cmd, "des"))
-		ba->cbc = 1;
+		ba->ct |= DES_CB;
+	ssl_allocate_k(k);
+	ssl_generate_key(ba, k);
 	ssl_des_init(ba, k);
 	return (0);
 }

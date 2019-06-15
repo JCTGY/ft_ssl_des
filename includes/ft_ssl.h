@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/16 18:09:02 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/14 22:14:48 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/15 10:39:23 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,10 @@
 # define BA64_A			3
 # define BA64_P			4
 
+# define DES_CB			(1 << 1)
+# define DES_C1			(1 << 2)
+# define DES_TR			(1 << 3)
+
 typedef struct			s_ssl
 {
 	int					flag;
@@ -63,7 +67,7 @@ typedef struct			s_ba64
 	int					aoe;
 	int					a;
 	int					pflag;
-	int					cbc;
+	int					ct;
 	size_t				len;
 	uint8_t				*key;
 	uint8_t				*iv;
