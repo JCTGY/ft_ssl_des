@@ -6,27 +6,12 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/13 18:33:38 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/15 10:48:24 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/15 11:07:42 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
 #include "ft_des.h"
-
- uint64_t			ssl_block(char *s)
-{
-	uint64_t		r;
-	int				i;
-
-	i = -1;
-	r = 0;
-	while (++i < 8)
-	{
-		r <<= 8;
-		r += (uint8_t)s[i];
-	}
-	return (r);
-}
 
 static uint64_t		ssl_des_sbox(uint64_t in)
 {
@@ -82,13 +67,12 @@ static uint64_t		ssl_des_bit(uint64_t in, int n, const unsigned char *g)
 	return (r);
 }
 
-int			ssl_des_enco(uint64_t msg, uint64_t ks[16], t_ba64 *ba, size_t b)
+static uint64_t		ssl_des_encode_help(uint64_t msg, uint64_t ks[16])
 {
 	uint64_t	tmp;
 	uint64_t	l;
 	uint64_t	r0;
 	uint64_t	r;
-	char		c;
 	int			i;
 
 	tmp = ssl_des_bit(msg, 64, g_des_ip1);
@@ -103,6 +87,16 @@ int			ssl_des_enco(uint64_t msg, uint64_t ks[16], t_ba64 *ba, size_t b)
 		r0 = r;
 	}
 	r = ssl_des_bit((r << 32) + l, 64, g_des_ip2);
+	return (r);
+}
+
+int					ssl_des_enco(uint64_t msg, uint64_t ks[16], t_ba64 *ba, size_t b)
+{
+	char		c;
+	uint64_t	r;
+	int			i;
+
+	r = ssl_des_encode_help(msg, ks);
 	if (ba->ct && ba->aoe == BA64_D)
 	{
 		ba->ct ^= DES_C1;
