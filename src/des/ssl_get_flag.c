@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/21 19:25:04 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/13 10:47:40 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/15 12:54:26 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,8 @@ int				ssl_des_flag(t_ba64 *ba, int ac, char **av, int i)
 	while (++i < ac)
 	{
 		ba->cmd = av[1];
-		if (av[i][0] == '-' && ft_strchr("iovksp", av[i][1]) && av[i][2] == '\0')
+		if (av[i][0] == '-' &&
+				ft_strchr("iovksp", av[i][1]) && av[i][2] == '\0')
 		{
 			if (!get_ssl_arg(ba, av, &i))
 				return (0);
@@ -112,6 +113,6 @@ int				ssl_des_flag(t_ba64 *ba, int ac, char **av, int i)
 	{
 		if (!ssl_stdin_key(ba))
 			return (0);
-	}		
+	}
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/22 20:16:23 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/13 16:19:22 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/15 12:46:10 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,15 @@ typedef struct			s_vai
 	int					i;
 }						t_vai;
 
-/*
-typedef struct			s_key
+typedef struct			s_kindex
 {
-	char				*msg;
-	uint8_t				*salt;
-	uint8_t				*key;
-	uint8_t				*iv;
-}						t_key;
-*/
+	uint64_t			r;
+	uint64_t			kc[16];
+	uint64_t			kd[16];
+	int					b;
+	int					i;
+	int					d;
+}						t_kindex;
 
 int						ssl_generate_key(t_ba64 *ba, t_key *k);
 int						ssl_hex_to_by(uint8_t *salt, t_key *k, int va);

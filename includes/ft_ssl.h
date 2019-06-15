@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/16 18:09:02 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/15 10:39:23 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/15 14:45:35 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,9 @@ typedef struct			s_key
 	uint8_t				*salt;
 	uint8_t				*key;
 	uint8_t				*iv;
+	uint8_t				*k1;
+	uint8_t				*k2;
+	uint8_t				*k3;
 }						t_key;
 
 typedef struct			s_hash
@@ -123,5 +126,6 @@ void					del_str(t_ssl *ssl);
 void					ssl_swap_data(t_ba64 *ba);
 void					display_usage(void);
 void					ssl_free_ba(t_ba64 *ba);
+void					ssl_allocate_k(t_key *k);
 
 #endif

@@ -6,13 +6,13 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/20 18:18:11 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/14 22:05:14 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/15 13:06:19 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_base64.h"
 
-int			check_base64(char *msg)
+int				check_base64(char *msg)
 {
 	int		i;
 
@@ -26,7 +26,7 @@ int			check_base64(char *msg)
 	return (1);
 }
 
-uint8_t		ssl_base64_deta(uint8_t c)
+uint8_t			ssl_base64_deta(uint8_t c)
 {
 	if (c >= 'A' && c <= 'Z')
 		return (c - 'A');
@@ -43,7 +43,15 @@ uint8_t		ssl_base64_deta(uint8_t c)
 	return (-1);
 }
 
-int			ssl_base64_reline(t_ba64 *ba, int len)
+static void		ssl_reline_help(t_ba64 *ba, int len, char *temp)
+{
+	ft_memdel((void *)&ba->msg);
+	ba->msg = ft_memalloc(sizeof(uint8_t) * len);
+	ft_memcpy(ba->msg, temp, len);
+	ft_memdel((void*)&temp);
+}
+
+int				ssl_base64_reline(t_ba64 *ba, int len)
 {
 	char		*temp;
 	t_index		in;
@@ -67,9 +75,6 @@ int			ssl_base64_reline(t_ba64 *ba, int len)
 	if (ba->msg[in.i - 1] != '\n' && in.c != in.n)
 		return (0);
 	temp[in.t - 1] = '\0';
-	ft_memdel((void *)&ba->msg);
-	ba->msg = ft_memalloc(sizeof(uint8_t) * in.i);
-	ft_memcpy(ba->msg, temp, in.i);
-	ft_memdel((void*)&temp);
+	ssl_reline_help(ba, in.i, temp);
 	return (1);
 }

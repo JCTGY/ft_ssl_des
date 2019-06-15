@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/17 11:01:06 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/14 19:39:52 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/15 16:50:06 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ static void		ssl_get_stdin(t_ba64 *ba)
 		ba->msg = (uint8_t*)ft_strjoin(temp, buff);
 		ft_strdel(&temp);
 	}
+	printf("what is stdin == %s\n", ba->msg);
 }
 
 static int		ssl_ba_check2(t_ba64 *ba)
@@ -53,7 +54,7 @@ static int		ssl_ba_check2(t_ba64 *ba)
 		ssl_base64_algo(ba);
 		write(fd, ba->data, ba->len);
 	}
-	else 
+	else
 		ssl_des_output(ba, fd);
 	close(fd);
 	return (1);
@@ -62,8 +63,9 @@ static int		ssl_ba_check2(t_ba64 *ba)
 static void		ssl_ba_stdin(t_ba64 *ba, int fd)
 {
 	char	*buff;
-	size_t	len = 0;
+	size_t	len;
 
+	len = 0;
 	while ((read(fd, &buff, 1)) == 1)
 		len++;
 	close(fd);

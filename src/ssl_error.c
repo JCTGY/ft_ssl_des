@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 09:30:04 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/05 15:00:17 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/15 16:43:17 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int				ismdc(char *argv)
 int				iscpc(char *argv)
 {
 	if (ft_strcmp(argv, "base64") && ft_strcmp(argv, "des")
-				&& ft_strcmp(argv, "des-ecb") && ft_strcmp(argv, "dec-cbc")
+				&& ft_strcmp(argv, "des-ecb") && ft_strcmp(argv, "des-cbc")
 				&& ft_strcmp(argv, "des3") && ft_strcmp(argv, "des3-ecb")
 				&& ft_strcmp(argv, "des3-cbc"))
 		return (0);

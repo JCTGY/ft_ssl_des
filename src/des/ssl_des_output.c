@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/08 20:14:01 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/14 21:25:35 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/15 13:03:28 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static void		ssl_re_output(t_ba64 *ba, int fd)
 	ssl_base64_std(ba);
 }
 
-int			ssl_des_output(t_ba64 *ba, int fd)
+int				ssl_des_output(t_ba64 *ba, int fd)
 {
 	t_key		k;
 
@@ -38,7 +38,7 @@ int			ssl_des_output(t_ba64 *ba, int fd)
 	{
 		write(fd, "Salted__", 8);
 		write(fd, k.salt, 8);
-	}	
+	}
 	write(fd, ba->data, ba->len);
 	if (ba->aoe != BA64_D && ft_strcmp(ba->cmd, "base64") && ba->a)
 		ssl_re_output(ba, fd);

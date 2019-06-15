@@ -6,110 +6,81 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/04 17:58:04 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/14 21:27:15 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/15 15:31:55 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
 #include "ft_des.h"
 
-static void			des_half_key(uint64_t kh[16], uint64_t k0)
-{
-	int			i;
-	uint64_t	add;
-	uint64_t	temp;
-	uint64_t	s;
-
-	i = -1;
-	s = k0;
-	while (++i < 16)
-	{
-		add = s >> (28 - g_left_shift[i]);
-		temp = s << g_left_shift[i];
-		temp += add;
-		temp = temp & 0xFFFFFFF;
-		s = temp;
-		kh[i] = temp;
-	}
-}
-
-static uint64_t		des_pc1(uint64_t k)
-{
-	int			i;
-	uint64_t	tmp;
-	uint64_t	r;
-
-	i = -1;
-	r = 0;
-	while (++i < 56)
-	{
-		tmp = (k >> (64 - g_des_pc1[i])) & 1;
-		r <<= 1;
-		r += tmp;
-	}
-	r <<= 8;
-	return (r);
-}
-
-int					ssl_shift_key(t_ba64 *ba, t_key *k, uint64_t sk[16])
-{
-	uint64_t	temp;
-	uint64_t	r;
-	uint64_t	kc[16];
-	uint64_t	kd[16];
-	int			d;
-	int			i;
-	int			b;
-
-	i = -1;
-	temp = (*(uint64_t *)k->key);
-	temp = des_pc1(temp);
-	des_half_key(kc, (temp >> 36) & 0xFFFFFFF);
-	des_half_key(kd, (temp >> 8) & 0xFFFFFFF);
-	while (++i < 16)
-	{
-		d = (ba->aoe == BA64_D) ? 15 - i : i;
-		temp = (kc[i] << 28) + kd[i];
-		r = 0;
-		b = -1;
-		while (++b < 48)
-		{
-			r <<= 1;
-			r += ((temp >> (56 - g_des_pc2[b])) & 1);
-		}
-		sk[d] = r;
-	}
-	return (0);
-}
-
-static void			calculate_key(t_ba64 *ba, t_key *k)
+static void			ssl_one_key(t_ba64 *ba, t_key *k)
 {
 	t_ssl		ssl;
 	size_t		len;
 	uint8_t		*temp;
 
 	ft_bzero(&ssl, sizeof(ssl));
+	ssl.p_flg |= SSL_DES;
+	len = ((ba->aoe != BA64_D && !ba->key) ||
+			!(ft_strncmp((char *)ba->msg, "Salted__", 8)))
+			? ft_strlen(ba->skey) + 8 : ft_strlen(ba->skey);
+	temp = ft_memalloc(sizeof(*temp) * len + 1);
+	ft_memcpy(temp, ba->skey, 8);
+	if ((ba->aoe != BA64_D && !ba->key) ||
+			!(ft_strncmp((char *)ba->msg, "Salted__", 8)))
+		ft_memcpy(temp + ft_strlen(ba->skey), k->salt, 8);
+	ssl_md5_init((uint8_t *)temp, len, &ssl);
+	if (!(ba->ct & DES_TR))
+	{
+		ft_memcpy(k->key, &ssl.md5[0], sizeof(ssl.md5[0]));
+		ft_memcpy(k->iv, &ssl.md5[1], sizeof(ssl.md5[1]));
+	}
+	else
+	{
+		ft_memcpy(k->k1, &ssl.md5[0], sizeof(ssl.md5[0]));
+		ft_memcpy(k->k2, &ssl.md5[1], sizeof(ssl.md5[1]));
+	}
+	ft_memdel((void *)&temp);
+}
+
+static void			ssl_tri_key(t_ba64 *ba, t_key *k)
+{
+	t_ssl		ssl;
+	uint8_t		*temp;
+
+	ft_bzero(&ssl, sizeof(ssl));
+	ssl.p_flg |= SSL_DES;
+	ssl_one_key(ba, k);
+	temp = ft_memalloc(sizeof(uint8_t) * 16 + 1);
+	ft_memcpy(temp, k->k1, 8);
+	ft_memcpy(temp + 8, k->k2, 8);
+	ssl_md5_init((uint8_t *)temp, 16, &ssl);
+	ft_memcpy(k->k3, &ssl.md5[0], sizeof(ssl.md5[0]));
+	ft_memcpy(k->iv, &ssl.md5[1], sizeof(ssl.md5[1]));
+	ft_memdel((void *)&temp);
+	printf("what is k1 == %llx\n",*(uint64_t *)k->k1);
+	printf("what is k2 == %llx\n",*(uint64_t *)k->k2);
+	printf("what is k3 == %llx\n",*(uint64_t *)k->k3);
+}
+
+static void			calculate_key(t_ba64 *ba, t_key *k)
+{
 	if (ba->key)
 	{
 		ssl_hex_to_by((uint8_t *)ba->key, k, I_KEY);
 		ssl_hex_to_by((uint8_t *)ba->iv, k, I_IV);
 	}
-	else
+	if (!(ba->ct & DES_TR))
+		ssl_one_key(ba, k);
+	if (ba->ct & DES_TR)
 	{
-		ssl.p_flg |= SSL_DES;
-		len = ((ba->aoe != BA64_D && !ba->key) || !(ft_strncmp((char *)ba->msg, "Salted__", 8)))
-				? ft_strlen(ba->skey) + 8 : ft_strlen(ba->skey);
-		temp = ft_memalloc(sizeof(*temp) * len + 1);
-		ft_memcpy(temp, ba->skey, 8);
-		if ((ba->aoe != BA64_D && !ba->key) || !(ft_strncmp((char *)ba->msg, "Salted__", 8)))
-			ft_memcpy(temp + ft_strlen(ba->skey), k->salt, 8);
-		ssl_md5_init((uint8_t *)temp, len, &ssl);
-		ft_memcpy(k->key, &ssl.md5[0], sizeof(ssl.md5[0]));
-		ft_memcpy(k->iv, &ssl.md5[1], sizeof(ssl.md5[1]));
-		ft_memdel((void *)&temp);
+		k->k1 = ft_memalloc(sizeof(uint8_t) * 8 + 1);
+		k->k2 = ft_memalloc(sizeof(uint8_t) * 8 + 1);
+		k->k3 = ft_memalloc(sizeof(uint8_t) * 8 + 1);
+		ssl_tri_key(ba, k);
 	}
 }
-	
+
 int					ssl_generate_key(t_ba64 *ba, t_key *k)
 {
 	if (!ba->salt && (ba->aoe == BA64_E || !ba->aoe) && !ba->key)

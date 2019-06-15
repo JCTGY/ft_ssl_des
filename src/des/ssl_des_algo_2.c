@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/13 18:33:38 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/15 11:07:42 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/15 13:04:39 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ static uint64_t		ssl_des_encode_help(uint64_t msg, uint64_t ks[16])
 
 	tmp = ssl_des_bit(msg, 64, g_des_ip1);
 	l = (tmp >> 32) & 0xFFFFFFFF;
-	r0 = tmp  & 0xFFFFFFFF;
+	r0 = tmp & 0xFFFFFFFF;
 	i = -1;
 	while (++i < 16)
 	{
@@ -90,7 +90,8 @@ static uint64_t		ssl_des_encode_help(uint64_t msg, uint64_t ks[16])
 	return (r);
 }
 
-int					ssl_des_enco(uint64_t msg, uint64_t ks[16], t_ba64 *ba, size_t b)
+int					ssl_des_enco(uint64_t msg, uint64_t ks[16],
+		t_ba64 *ba, size_t b)
 {
 	char		c;
 	uint64_t	r;
