@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/05 12:53:40 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/15 11:07:30 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/15 17:41:18 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,8 +80,6 @@ int				ssl_hex_to_by(uint8_t *hex, t_key *k, int va)
 	}
 	if (va == I_SALT)
 		*(uint64_t*)k->salt = swap_64bit(*(uint64_t*)k->salt);
-	printf("key == %llx\n", *(uint64_t*)k->key);
-	printf("iv == %llx\n", *(uint64_t*)k->iv);
 	return (0);
 }
 

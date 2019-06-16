@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/22 20:15:46 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/15 16:54:14 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/15 17:52:46 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ static int		ssl_des_init(t_ba64 *ba, t_key *k)
 	uint64_t	msg;
 
 	ssl_padding(ba, k, ba->len);
+	printf("ba->len == %zu\n", ba->len);
 	ssl_shift_key(ba, k, sk);
 	if (ba->ct)
 		ba->last = *(uint64_t *)k->iv;

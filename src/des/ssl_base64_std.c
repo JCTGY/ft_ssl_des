@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/17 11:01:06 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/15 16:50:06 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/15 17:26:28 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ static void		ssl_get_stdin(t_ba64 *ba)
 		if (ret == 0)
 			break ;
 		buff[1] = '\0';
+		ba->len++;
 		temp = (char*)ba->msg;
 		ba->msg = (uint8_t*)ft_strjoin(temp, buff);
 		ft_strdel(&temp);

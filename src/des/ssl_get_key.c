@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/04 17:58:04 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/15 15:31:55 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/15 17:40:20 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,9 @@ static void			ssl_tri_key(t_ba64 *ba, t_key *k)
 	ft_memcpy(k->k3, &ssl.md5[0], sizeof(ssl.md5[0]));
 	ft_memcpy(k->iv, &ssl.md5[1], sizeof(ssl.md5[1]));
 	ft_memdel((void *)&temp);
-	printf("what is k1 == %llx\n",*(uint64_t *)k->k1);
-	printf("what is k2 == %llx\n",*(uint64_t *)k->k2);
-	printf("what is k3 == %llx\n",*(uint64_t *)k->k3);
+//	printf("what is k1 == %llx\n",*(uint64_t *)k->k1);
+//	printf("what is k2 == %llx\n",*(uint64_t *)k->k2);
+//	printf("what is k3 == %llx\n",*(uint64_t *)k->k3);
 }
 
 static void			calculate_key(t_ba64 *ba, t_key *k)

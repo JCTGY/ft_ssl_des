@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/08 20:14:01 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/15 13:03:28 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/15 17:32:44 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int				ssl_des_output(t_ba64 *ba, int fd)
 		ssl_swap_data(ba);
 	}
 	ssl_des_algo(ba, &k);
-	if (ba->aoe != BA64_D)
+	if (ba->aoe != BA64_D && !ba->key)
 	{
 		write(fd, "Salted__", 8);
 		write(fd, k.salt, 8);

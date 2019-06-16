@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/15 13:10:12 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/15 13:11:11 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/15 17:52:46 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ int					ssl_shift_key(t_ba64 *ba, t_key *k, uint64_t sk[16])
 
 	ki.i = -1;
 	temp = (*(uint64_t *)k->key);
+	printf("key == %llx\n", (uint64_t)sk[ki.d]);
 	temp = des_pc1(temp);
 	des_half_key(ki.kc, (temp >> 36) & 0xFFFFFFF);
 	des_half_key(ki.kd, (temp >> 8) & 0xFFFFFFF);
@@ -73,6 +74,8 @@ int					ssl_shift_key(t_ba64 *ba, t_key *k, uint64_t sk[16])
 			ki.r += ((temp >> (56 - g_des_pc2[ki.b])) & 1);
 		}
 		sk[ki.d] = ki.r;
+		printf("key == %llx\n", (uint64_t)sk[ki.d]);
+
 	}
 	return (0);
 }

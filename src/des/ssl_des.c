@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/21 19:01:21 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/14 21:55:20 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/15 17:23:09 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static void		ssl_des_encp(t_ba64 *ba, t_key *k)
 	if (!ba->a)
 	{
 		ssl_des_algo(ba, k);
-		if (ba->aoe != BA64_D)
+		if (ba->aoe != BA64_D && !ba->key)
 		{
 			write(1, "Salted__", 8);
 			write(1, k->salt, 8);
