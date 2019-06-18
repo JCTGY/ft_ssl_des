@@ -70,9 +70,9 @@ static void			calculate_key(t_ba64 *ba, t_key *k)
 		ssl_hex_to_by((uint8_t *)ba->key, k, I_KEY);
 		ssl_hex_to_by((uint8_t *)ba->iv, k, I_IV);
 	}
-	if (!(ba->ct & DES_TR))
+	else if (!(ba->ct & DES_TR))
 		ssl_one_key(ba, k);
-	if (ba->ct & DES_TR)
+	else if (ba->ct & DES_TR)
 	{
 		k->k1 = ft_memalloc(sizeof(uint8_t) * 8 + 1);
 		k->k2 = ft_memalloc(sizeof(uint8_t) * 8 + 1);

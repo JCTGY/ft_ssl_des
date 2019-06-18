@@ -31,25 +31,26 @@ static uint8_t	change_hex_help(char s1)
 	else if (s1 >= '0' && s1 <= '9')
 		return (s1 - '0');
 	else if (s1 == '\0')
-		return (0);
+		return (DES_NU);
 	return (-1);
 }
 
 static int		change_hex(char s1, char s2, t_key *k, t_vai *v)
 {
-	uint8_t		temp;
+	char		temp;
+	char		counter;
 
-	if (!(temp = change_hex_help(s1)))
+	if ((temp = change_hex_help(s1)) == DES_NU)
 		return (0);
 	temp <<= 4;
-	temp += change_hex_help(s2);
+	temp += ((counter = change_hex_help(s2)) != DES_NU) ? change_hex_help(s2) : 0;
 	if (v->va == I_SALT)
 		k->salt[v->i] = temp;
 	else if (v->va == I_KEY)
 		k->key[v->i] = temp;
 	else if (v->va == I_IV)
 		k->iv[v->i] = temp;
-	if (!change_hex_help(s2))
+	if ((temp = change_hex_help(s2)) == DES_NU)
 	{
 		v->i--;
 		return (0);

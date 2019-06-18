@@ -58,7 +58,6 @@ int					ssl_shift_key(t_ba64 *ba, t_key *k, uint64_t sk[16])
 
 	ki.i = -1;
 	temp = (*(uint64_t *)k->key);
-	printf("key == %llx\n", (uint64_t)sk[ki.d]);
 	temp = des_pc1(temp);
 	des_half_key(ki.kc, (temp >> 36) & 0xFFFFFFF);
 	des_half_key(ki.kd, (temp >> 8) & 0xFFFFFFF);
@@ -74,8 +73,6 @@ int					ssl_shift_key(t_ba64 *ba, t_key *k, uint64_t sk[16])
 			ki.r += ((temp >> (56 - g_des_pc2[ki.b])) & 1);
 		}
 		sk[ki.d] = ki.r;
-		printf("key == %llx\n", (uint64_t)sk[ki.d]);
-
 	}
 	return (0);
 }

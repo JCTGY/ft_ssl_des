@@ -58,10 +58,10 @@ static int		ssl_des_init(t_ba64 *ba, t_key *k)
 	uint64_t	msg;
 
 	ssl_padding(ba, k, ba->len);
-	printf("ba->len == %zu\n", ba->len);
 	ssl_shift_key(ba, k, sk);
 	if (ba->ct)
 		ba->last = *(uint64_t *)k->iv;
+	printf("iv == %llx\n", *(uint64_t *)k->iv);
 	ba->data = (uint8_t *)ft_memalloc(sizeof(uint8_t) * ba->len + 1);
 	m = 0;
 	ba->ct |= (!m && ba->ct) ? DES_C1 : 0;

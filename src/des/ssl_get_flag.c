@@ -91,9 +91,9 @@ static int		get_ssl_arg(t_ba64 *ba, char **av, int *i)
 
 int				ssl_des_flag(t_ba64 *ba, int ac, char **av, int i)
 {
+	ba->cmd = av[1];
 	while (++i < ac)
 	{
-		ba->cmd = av[1];
 		if (av[i][0] == '-' &&
 				ft_strchr("iovksp", av[i][1]) && av[i][2] == '\0')
 		{
