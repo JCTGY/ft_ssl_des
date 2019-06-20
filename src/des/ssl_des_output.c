@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/08 20:14:01 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/15 17:32:44 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/18 14:05:10 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ int				ssl_des_output(t_ba64 *ba, int fd)
 		write(fd, k.salt, 8);
 	}
 	write(fd, ba->data, ba->len);
+	printf("output len == %zu\n", ba->len);
 	if (ba->aoe != BA64_D && ft_strcmp(ba->cmd, "base64") && ba->a)
 		ssl_re_output(ba, fd);
 	ssl_free_k(&k);

@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/22 20:15:46 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/15 17:52:46 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/19 21:32:03 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,18 +19,21 @@ static void		ssl_padding(t_ba64 *ba, t_key *k, size_t old)
 
 	if (!ba->aoe || ba->aoe == BA64_E)
 	{
+		ba->old = old;
 		len = (old / 8 + 1) * 8;
 		if (len == old)
 			len += 8;
-		ba->len = len;
+		ba->len = (ba->ct != DES_TR) ? len : ba->len;
 		k->msg = ft_strnew(len);
 		ft_memcpy(k->msg, ba->msg, old);
-		ft_memset(k->msg + old, len - old, len - old);
+		if (ba->len != old)
+			ft_memset(k->msg + old, len - old, len - old);
 	}
 	else if (!ft_strncmp((char *)ba->msg, "Salted__", 8)
 			&& ba->aoe == BA64_D)
 	{
-		ba->len = ba->len - 16;
+	//	ba->len = (!(ba->ct & DES_TR)) ? ba->len - 16 : ba->len;
+		printf("ba->len before kmsg == %zu\n", ba->len);
 		k->msg = ft_strnew(ba->len);
 		ft_memcpy(k->msg, ba->msg + 16, ba->len);
 	}
@@ -46,8 +49,11 @@ int				ssl_rm_padding(t_ba64 *ba, t_key *k)
 	int		p;
 
 	p = k->msg[ba->len - 1];
-	ba->len -= p;
-	ba->data[ba->len] = '\0';
+	if (p >= 1 && p <= 8)
+	{
+		ba->len -= p;
+		ba->data[ba->len] = '\0';
+	}
 	return (0);
 }
 
@@ -61,7 +67,6 @@ static int		ssl_des_init(t_ba64 *ba, t_key *k)
 	ssl_shift_key(ba, k, sk);
 	if (ba->ct)
 		ba->last = *(uint64_t *)k->iv;
-	printf("iv == %llx\n", *(uint64_t *)k->iv);
 	ba->data = (uint8_t *)ft_memalloc(sizeof(uint8_t) * ba->len + 1);
 	m = 0;
 	ba->ct |= (!m && ba->ct) ? DES_C1 : 0;
@@ -75,7 +80,7 @@ static int		ssl_des_init(t_ba64 *ba, t_key *k)
 			ba->last = msg;
 		m += 8;
 	}
-//	(ba->aoe != BA64_D) && ssl_rm_padding(ba, k);
+//	(ba->aoe == BA64_D) && ssl_rm_padding(ba, k);
 	return (1);
 }
 
@@ -96,22 +101,31 @@ static void		ssl_trkey_init(t_ba64 *ba, t_key *k)
 		ft_memcpy(k->key, k->k1, 8);
 		ssl_des_init(ba, k);
 		printf("what is the len == %zu\n", ba->len);
-		ssl_swap_wsalt(ba, k);
+	//	ssl_swap_wsalt(ba, k);
+	//	write(1, ba->msg, ba->len + 16);
+	//	printf("\n**************\n");
+		ssl_swap_data(ba);
 		ba->aoe = BA64_D;
 		ft_memset(k->key, 0, 8);
 		ft_memcpy(k->key, k->k2, 8);
 		ssl_des_init(ba, k);
+	//	write(1, ba->data, ba->len);
+	//	printf("\n**************\n");
 		printf("what is the len == %zu\n", ba->len);
 		ssl_swap_data(ba);
 		ba->aoe = BA64_E;
 		ft_memset(k->key, 0, 8);
 		ft_memcpy(k->key, k->k3, 8);
 		ssl_des_init(ba, k);
+	//	write(1, ba->data, ba->len);
+	//	printf("\n**************\n");
 		printf("what is the len == %zu\n", ba->len);
 	}
 	else if (ba->aoe == BA64_D)
 	{
 		ft_memcpy(k->key, k->k3, 8);
+		if (!ft_strncmp((char *)ba->msg, "Salted__", 8))
+			ba->len = ba->len - 16;
 		ssl_des_init(ba, k);
 		printf("what is the len == %zu\n", ba->len);
 		ssl_swap_data(ba);
@@ -120,11 +134,13 @@ static void		ssl_trkey_init(t_ba64 *ba, t_key *k)
 		ft_memcpy(k->key, k->k2, 8);
 		ssl_des_init(ba, k);
 		printf("what is the len == %zu\n", ba->len);
-		ssl_swap_wsalt(ba, k);
+	//	ssl_swap_wsalt(ba, k);
+		ssl_swap_data(ba);
 		ba->aoe = BA64_D;
 		ft_memset(k->key, 0, 8);
 		ft_memcpy(k->key, k->k1, 8);
 		ssl_des_init(ba, k);
+		printf("what is the len == %zu\n", ba->len);
 	}
 }
 

@@ -59,13 +59,10 @@ static uint64_t		ssl_des_bit(uint64_t in, int n, const unsigned char *g)
 
 	i = -1;
 	r = 0;
-	//printf("in == %llx\n", in);
 	while (++i < n)
 	{
 		r <<= 1;
 		r += (in >> (n - g[i])) & 1;
-		//printf("rr == %llx\n", r);
-
 	}
 	return (r);
 }
@@ -78,9 +75,7 @@ static uint64_t		ssl_des_encode_help(uint64_t msg, uint64_t ks[16])
 	uint64_t	r;
 	int			i;
 
-	//printf("msg == %llx\n", msg);
 	tmp = ssl_des_bit(msg, 64, g_des_ip1);
-	//printf("tmp == %llx\n", tmp);
 	l = (tmp >> 32) & 0xFFFFFFFF;
 	r0 = tmp & 0xFFFFFFFF;
 	i = -1;
@@ -116,6 +111,5 @@ int					ssl_des_enco(uint64_t msg, uint64_t ks[16],
 	}
 	if (ba->ct && ba->aoe != BA64_D)
 		ba->last = r;
-	//printf("msg == %llx\n", ba->last);
 	return (0);
 }

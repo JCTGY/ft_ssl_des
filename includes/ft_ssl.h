@@ -71,6 +71,7 @@ typedef struct			s_ba64
 	int					pflag;
 	int					ct;
 	size_t				len;
+	size_t				old;
 	uint8_t				*key;
 	uint8_t				*iv;
 	uint8_t				*salt;
