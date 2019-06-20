@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/13 18:33:38 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/15 13:04:39 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/20 10:16:41 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ int					ssl_des_enco(uint64_t msg, uint64_t ks[16],
 	int			i;
 
 	r = ssl_des_encode_help(msg, ks);
-	if (ba->ct && ba->aoe == BA64_D)
+	if ((ba->ct & DES_CB) && ba->aoe == BA64_D)
 	{
 		ba->ct ^= DES_C1;
 		r ^= ba->last;
@@ -109,7 +109,7 @@ int					ssl_des_enco(uint64_t msg, uint64_t ks[16],
 		c = (r >> (56 - (i * 8))) & 0xFF;
 		ba->data[i + b] = c;
 	}
-	if (ba->ct && ba->aoe != BA64_D)
+	if ((ba->ct & DES_CB) && ba->aoe != BA64_D)
 		ba->last = r;
 	return (0);
 }
