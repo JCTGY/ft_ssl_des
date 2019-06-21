@@ -6,32 +6,45 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/15 11:06:54 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/20 22:10:09 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/21 10:24:46 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
 #include "ft_des.h"
+#include "ft_sha512.h"
 
-void				ssl_hex_to_char(t_ba64 *ba, uint8_t *temp, t_key *k)
+int					ssl_hex_to_char(t_ba64 *ba, uint8_t *temp, t_key *k)
 {
 //	char	*key2;
-	int		i;
+	uint64_t	tmp;
+	int			i;
 
 	//key = ft_itoa_base(1, 16, 16, *(uint64_t*)k->k1);
 	//key2 = ft_itoa_base(1, 16, 16, *(uint64_t*)k->k2);
 	i = 0;
-	ft_memcpy(temp, k->k1, 8);
-	ft_memcpy(temp + 8, k->k2, 16);
+	tmp = swap_64bit(*(uint64_t*)k->k1);;
+	ft_memcpy(temp, &tmp, 8);
+	tmp = swap_64bit(*(uint64_t*)k->k2);;
+	ft_memcpy(temp + 8, &tmp, 8);
 	ft_memcpy(temp + 16, ba->skey, ft_strlen(ba->skey));
-//	i += (16 + ft_strlen(ba->skey));
-//	ft_memcpy(temp + i, k->salt, 8);
+	i += (16 + ft_strlen(ba->skey));
+	ft_memcpy(temp + i, k->salt, 8);
+	i += 8;
 	//ft_strdel(&key);
 	//ft_strdel(&key2);
-	printf("baskey len  == %zu\n", ft_strlen(ba->skey));
-	printf("key itoa == %016llX\n", *(uint64_t*)(temp));
-	printf("key itoa == %016llX\n", *(uint64_t*)(temp + 8));
-	printf("key itoa == %016llX\n", *(uint64_t*)(temp + 16));
+//	printf("key itoa == %016llX\n", *(uint64_t*)(temp));
+//	printf("key itoa == %016llX\n", *(uint64_t*)(temp + 8));
+//	printf("key itoa == %016llX\n", *(uint64_t*)(temp + 16));
+	for (int x = 0; x < 24; x += 8){
+		uint64_t r = 0;
+		for (int y = 0; y < 8; y++){
+			r <<= 8;
+			r += temp[y + x];
+		}
+		printf("hex of the slated == %llx\n", r);
+	}
+	return (i);
 }
 
 void				ssl_allocate_k(t_key *k)

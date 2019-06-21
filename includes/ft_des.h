@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/22 20:16:23 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/20 21:33:35 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/21 10:11:03 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int						ssl_generate_key(t_ba64 *ba, t_key *k);
 int						ssl_hex_to_by(uint8_t *salt, t_key *k, int va);
 int						ssl_shift_key(t_ba64 *ba, t_key *k, uint64_t sk[16]);
 int						decode_salt(t_ba64 *ba, t_key *k);
-void					ssl_hex_to_char(t_ba64 *ba, uint8_t *temp, t_key *k);
+int						ssl_hex_to_char(t_ba64 *ba, uint8_t *temp, t_key *k);
 
 static unsigned char	g_des_pc1[] = {
 	57, 49, 41, 33, 25, 17, 9,

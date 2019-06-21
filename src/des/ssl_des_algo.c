@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/22 20:15:46 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/20 10:08:26 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/21 12:48:36 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ static int		ssl_des_init(t_ba64 *ba, t_key *k)
 	uint64_t	msg;
 
 	ssl_shift_key(ba, k, sk);
-	if (ba->ct)
+	if (ba->ct & DES_CB)
 		ba->last = *(uint64_t *)k->iv;
 	ba->data = (uint8_t *)ft_memalloc(sizeof(uint8_t) * ba->len + 1);
 	m = 0;

@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/04 17:58:04 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/20 21:52:33 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/21 10:21:52 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,14 @@ static void			ssl_one_key(t_ba64 *ba, t_key *k)
 	ft_bzero(&ssl, sizeof(ssl));
 	ssl.p_flg |= SSL_DES;
 	len = ft_strlen(ba->skey);
-//	len = ((ba->aoe != BA64_D && !ba->key) ||
-//			!(ft_strncmp((char *)ba->msg, "Salted__", 8)))
-//			? ft_strlen(ba->skey) + 8 : ft_strlen(ba->skey);
+	len = ((ba->aoe != BA64_D && !ba->key) ||
+			!(ft_strncmp((char *)ba->msg, "Salted__", 8)))
+			? ft_strlen(ba->skey) + 8 : ft_strlen(ba->skey);
 	temp = ft_memalloc(sizeof(*temp) * len + 1);
 	ft_memcpy(temp, ba->skey, 8);
-//	if ((ba->aoe != BA64_D && !ba->key) ||
-//			!(ft_strncmp((char *)ba->msg, "Salted__", 8)))
-//		ft_memcpy(temp + ft_strlen(ba->skey), k->salt, 8);
+	if ((ba->aoe != BA64_D && !ba->key) ||
+			!(ft_strncmp((char *)ba->msg, "Salted__", 8)))
+		ft_memcpy(temp + ft_strlen(ba->skey), k->salt, 8);
 	ssl_md5_init((uint8_t *)temp, len, &ssl);
 	if (!(ba->ct & DES_TR))
 	{
@@ -47,17 +47,15 @@ static void			ssl_one_key(t_ba64 *ba, t_key *k)
 static void			ssl_tri_key(t_ba64 *ba, t_key *k)
 {
 	t_ssl		ssl;
+	int			b;
 	uint8_t		*temp;
 
 	ft_bzero(&ssl, sizeof(ssl));
 	ssl.p_flg |= SSL_DES;
 	ssl_one_key(ba, k);
 	temp = ft_memalloc(sizeof(uint8_t) * (16 + ft_strlen(ba->skey)) + 1);
-	ssl_hex_to_char(ba, temp, k);
-//	ft_memcpy(temp, k->k1, 8);
-//	ft_memcpy(temp + 8, k->k2, 8);
-	printf("temp == %s\n", temp);
-	ssl_md5_init(temp, 32, &ssl);
+	b = ssl_hex_to_char(ba, temp, k);
+	ssl_md5_init(temp, b, &ssl);
 	ft_memcpy(k->k3, &ssl.md5[0], sizeof(ssl.md5[0]));
 	ft_memcpy(k->iv, &ssl.md5[1], sizeof(ssl.md5[1]));
 	ft_memdel((void *)&temp);
