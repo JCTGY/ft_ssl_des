@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/18 19:26:21 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/05 20:02:23 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/20 21:07:34 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ int				ssl_md5_init(uint8_t *msg, size_t len, t_ssl *ssl)
 {
 	t_md5		md5;
 
+	printf("msg == %s\n", msg);
 	ft_bzero(&md5, sizeof(t_md5));
 	md5_padding(msg, len, &md5);
 	md5_transform(&md5);

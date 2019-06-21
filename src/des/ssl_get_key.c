@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/04 17:58:04 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/20 12:31:51 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/20 21:52:33 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,15 @@ static void			ssl_one_key(t_ba64 *ba, t_key *k)
 
 	ft_bzero(&ssl, sizeof(ssl));
 	ssl.p_flg |= SSL_DES;
-	len = ((ba->aoe != BA64_D && !ba->key) ||
-			!(ft_strncmp((char *)ba->msg, "Salted__", 8)))
-			? ft_strlen(ba->skey) + 8 : ft_strlen(ba->skey);
+	len = ft_strlen(ba->skey);
+//	len = ((ba->aoe != BA64_D && !ba->key) ||
+//			!(ft_strncmp((char *)ba->msg, "Salted__", 8)))
+//			? ft_strlen(ba->skey) + 8 : ft_strlen(ba->skey);
 	temp = ft_memalloc(sizeof(*temp) * len + 1);
 	ft_memcpy(temp, ba->skey, 8);
-	if ((ba->aoe != BA64_D && !ba->key) ||
-			!(ft_strncmp((char *)ba->msg, "Salted__", 8)))
-		ft_memcpy(temp + ft_strlen(ba->skey), k->salt, 8);
+//	if ((ba->aoe != BA64_D && !ba->key) ||
+//			!(ft_strncmp((char *)ba->msg, "Salted__", 8)))
+//		ft_memcpy(temp + ft_strlen(ba->skey), k->salt, 8);
 	ssl_md5_init((uint8_t *)temp, len, &ssl);
 	if (!(ba->ct & DES_TR))
 	{
@@ -51,8 +52,8 @@ static void			ssl_tri_key(t_ba64 *ba, t_key *k)
 	ft_bzero(&ssl, sizeof(ssl));
 	ssl.p_flg |= SSL_DES;
 	ssl_one_key(ba, k);
-	temp = ft_memalloc(sizeof(uint8_t) * 32 + 1);
-	ssl_hex_to_char(temp, k);
+	temp = ft_memalloc(sizeof(uint8_t) * (16 + ft_strlen(ba->skey)) + 1);
+	ssl_hex_to_char(ba, temp, k);
 //	ft_memcpy(temp, k->k1, 8);
 //	ft_memcpy(temp + 8, k->k2, 8);
 	printf("temp == %s\n", temp);
