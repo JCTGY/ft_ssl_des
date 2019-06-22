@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/16 18:08:12 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/14 21:51:03 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/21 21:46:25 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,12 +119,7 @@ int				main(int argc, char **argv)
 	if (!check_error(argv[1]))
 		return (0);
 	if (iscpc(argv[1]))
-	{
-		ssl_cpcverify(argc, argv);
-		while (1);
-		return (0);
-	}
-	//	return (ssl_cpcverify(argc, argv));
+		return (ssl_cpcverify(argc, argv));
 	else if ((i = collect_flags(argv, &ssl)) == 0)
 		return (0);
 	if (!read_msg(argv, &ssl, i))
