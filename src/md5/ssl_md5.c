@@ -106,7 +106,6 @@ int				ssl_md5_init(uint8_t *msg, size_t len, t_ssl *ssl)
 {
 	t_md5		md5;
 
-	printf("msg == %s\n", msg);
 	ft_bzero(&md5, sizeof(t_md5));
 	md5_padding(msg, len, &md5);
 	md5_transform(&md5);

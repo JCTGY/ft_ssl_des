@@ -20,7 +20,9 @@ static void		ssl_re_output(t_ba64 *ba, int fd)
 	ba->len += 16;
 	ba->ifd = ba->ofd;
 	ba->cmd = ft_strdup("2nd64");
+	ssl_free_ba(ba);
 	ssl_base64_std(ba);
+	ft_strdel(&ba->cmd);
 }
 
 int				ssl_des_output(t_ba64 *ba, int fd)
@@ -40,7 +42,6 @@ int				ssl_des_output(t_ba64 *ba, int fd)
 		write(fd, k.salt, 8);
 	}
 	write(fd, ba->data, ba->len);
-	printf("output len == %zu\n", ba->len);
 	if (ba->aoe != BA64_D && ft_strcmp(ba->cmd, "base64") && ba->a)
 		ssl_re_output(ba, fd);
 	ssl_free_k(&k);

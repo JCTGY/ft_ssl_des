@@ -29,7 +29,6 @@ static void		ssl_get_stdin(t_ba64 *ba)
 		ba->msg = (uint8_t*)ft_strjoin(temp, buff);
 		ft_strdel(&temp);
 	}
-	printf("what is stdin == %s\n", ba->msg);
 }
 
 static int		ssl_ba_check2(t_ba64 *ba)

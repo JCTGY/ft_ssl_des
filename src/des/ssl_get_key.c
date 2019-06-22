@@ -6,31 +6,15 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/04 17:58:04 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/21 10:21:52 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/21 20:04:07 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
 #include "ft_des.h"
 
-static void			ssl_one_key(t_ba64 *ba, t_key *k)
+static void			ssl_one_key_help(t_ba64 *ba, t_key *k, t_ssl ssl)
 {
-	t_ssl		ssl;
-	size_t		len;
-	uint8_t		*temp;
-
-	ft_bzero(&ssl, sizeof(ssl));
-	ssl.p_flg |= SSL_DES;
-	len = ft_strlen(ba->skey);
-	len = ((ba->aoe != BA64_D && !ba->key) ||
-			!(ft_strncmp((char *)ba->msg, "Salted__", 8)))
-			? ft_strlen(ba->skey) + 8 : ft_strlen(ba->skey);
-	temp = ft_memalloc(sizeof(*temp) * len + 1);
-	ft_memcpy(temp, ba->skey, 8);
-	if ((ba->aoe != BA64_D && !ba->key) ||
-			!(ft_strncmp((char *)ba->msg, "Salted__", 8)))
-		ft_memcpy(temp + ft_strlen(ba->skey), k->salt, 8);
-	ssl_md5_init((uint8_t *)temp, len, &ssl);
 	if (!(ba->ct & DES_TR))
 	{
 		ft_memcpy(k->key, &ssl.md5[0], sizeof(ssl.md5[0]));
@@ -41,6 +25,26 @@ static void			ssl_one_key(t_ba64 *ba, t_key *k)
 		ft_memcpy(k->k1, &ssl.md5[0], sizeof(ssl.md5[0]));
 		ft_memcpy(k->k2, &ssl.md5[1], sizeof(ssl.md5[1]));
 	}
+}
+
+static void			ssl_one_key(t_ba64 *ba, t_key *k)
+{
+	t_ssl		ssl;
+	size_t		len;
+	uint8_t		*temp;
+
+	ft_bzero(&ssl, sizeof(ssl));
+	ssl.p_flg |= SSL_DES;
+	len = ((ba->aoe != BA64_D && !ba->key) ||
+			!(ft_strncmp((char *)ba->msg, "Salted__", 8)))
+			? ft_strlen(ba->skey) + 8 : ft_strlen(ba->skey);
+	temp = ft_memalloc(sizeof(*temp) * len + 1);
+	ft_memcpy(temp, ba->skey, 8);
+	if ((ba->aoe != BA64_D && !ba->key) ||
+			!(ft_strncmp((char *)ba->msg, "Salted__", 8)))
+		ft_memcpy(temp + ft_strlen(ba->skey), k->salt, 8);
+	ssl_md5_init((uint8_t *)temp, len, &ssl);
+	ssl_one_key_help(ba, k, ssl);
 	ft_memdel((void *)&temp);
 }
 
@@ -59,9 +63,6 @@ static void			ssl_tri_key(t_ba64 *ba, t_key *k)
 	ft_memcpy(k->k3, &ssl.md5[0], sizeof(ssl.md5[0]));
 	ft_memcpy(k->iv, &ssl.md5[1], sizeof(ssl.md5[1]));
 	ft_memdel((void *)&temp);
-	printf("what is k1 == %llx\n",*(uint64_t *)k->k1);
-	printf("what is k2 == %llx\n",*(uint64_t *)k->k2);
-	printf("what is k3 == %llx\n",*(uint64_t *)k->k3);
 }
 
 static void			calculate_key(t_ba64 *ba, t_key *k)
@@ -72,11 +73,7 @@ static void			calculate_key(t_ba64 *ba, t_key *k)
 		ssl_hex_to_by((uint8_t *)ba->iv, k, I_IV);
 	}
 	else if (!(ba->ct & DES_TR))
-	{
 		ssl_one_key(ba, k);
-		printf("what is key == %llx\n",*(uint64_t *)k->key);
-		printf("what is iv == %llx\n",*(uint64_t *)k->iv);
-	}
 	else if (ba->ct & DES_TR)
 	{
 		k->k1 = ft_memalloc(sizeof(uint8_t) * 8 + 1);

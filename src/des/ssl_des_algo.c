@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/22 20:15:46 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/21 15:40:02 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/21 19:46:48 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ static void		ssl_padding(t_ba64 *ba, t_key *k, size_t old)
 			&& ba->aoe == BA64_D)
 	{
 		ba->len = ba->len - 16;
-		printf("ba->len before kmsg == %zu\n", ba->len);
 		k->msg = ft_strnew(ba->len);
 		ft_memcpy(k->msg, ba->msg + 16, ba->len);
 	}
@@ -41,19 +40,6 @@ static void		ssl_padding(t_ba64 *ba, t_key *k, size_t old)
 		k->msg = ft_strnew(ba->len);
 		ft_memcpy(k->msg, ba->msg, ba->len);
 	}
-}
-
-int				ssl_rm_padding(t_ba64 *ba, t_key *k)
-{
-	int		p;
-
-	p = k->msg[ba->len - 1];
-	if (p >= 1 && p <= 8)
-	{
-		ba->len -= p;
-		ba->data[ba->len] = '\0';
-	}
-	return (0);
 }
 
 int				ssl_des_init(t_ba64 *ba, t_key *k)
@@ -77,7 +63,6 @@ int				ssl_des_init(t_ba64 *ba, t_key *k)
 			ba->last = msg;
 		m += 8;
 	}
-//	(ba->aoe == BA64_D) && ssl_rm_padding(ba, k);
 	return (1);
 }
 

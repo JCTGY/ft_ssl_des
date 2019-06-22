@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/05 12:53:40 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/15 17:41:18 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/21 19:53:25 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,8 @@ static int		change_hex(char s1, char s2, t_key *k, t_vai *v)
 	if ((temp = change_hex_help(s1)) == DES_NU)
 		return (0);
 	temp <<= 4;
-	temp += ((counter = change_hex_help(s2)) != DES_NU) ? change_hex_help(s2) : 0;
+	temp +=
+		((counter = change_hex_help(s2)) != DES_NU) ? change_hex_help(s2) : 0;
 	if (v->va == I_SALT)
 		k->salt[v->i] = temp;
 	else if (v->va == I_KEY)
@@ -89,8 +90,8 @@ int				decode_salt(t_ba64 *ba, t_key *k)
 	if (!ft_strncmp((char *)ba->msg, "Salted__", 8))
 	{
 		ft_memcpy(k->salt, ba->msg + 8, 8);
-		k->msg = ft_strdup(&(*((char *)ba->msg + 16)));
 		return (0);
 	}
+	k->salt = NULL;
 	return (1);
 }
