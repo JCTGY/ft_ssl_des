@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/16 18:09:02 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/21 17:21:18 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/22 12:51:38 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,8 @@ int						ssl_base64_algo(t_ba64 *ba);
 int						ssl_des_algo(t_ba64 *ba, t_key *k);
 int						ssl_des_flag(t_ba64 *ba, int ac, char **av, int i);
 int						ssl_des_output(t_ba64 *ba, int fd);
-int						ssl_des_enco(uint64_t msg, uint64_t ks[16], t_ba64 *ba, size_t b);
+int						ssl_des_enco(uint64_t msg, uint64_t ks[16], \
+		t_ba64 *ba, size_t b);
 uint64_t				ssl_block(char *s);
 void					ssl_free_k(t_key *k);
 void					del_str(t_ssl *ssl);

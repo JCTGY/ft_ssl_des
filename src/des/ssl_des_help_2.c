@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/15 11:06:54 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/21 20:06:00 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/22 12:50:25 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,8 @@ int					ssl_hex_to_char(t_ba64 *ba, uint8_t *temp, t_key *k)
 	ft_memcpy(temp + 8, &tmp, 8);
 	ft_memcpy(temp + 16, ba->skey, ft_strlen(ba->skey));
 	i += (16 + ft_strlen(ba->skey));
-	if (!ft_strncmp((char *)ba->msg, "Salted__", 8) || (!ba->key && ba->aoe != BA64_D))
+	if (!ft_strncmp((char *)ba->msg, "Salted__", 8) ||
+			(!ba->key && ba->aoe != BA64_D))
 	{
 		ft_memcpy(temp + i, k->salt, 8);
 		i += 8;
