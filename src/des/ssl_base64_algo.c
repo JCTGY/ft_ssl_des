@@ -38,7 +38,7 @@ static int			ssl_base64_decode(t_ba64 *ba, t_balgo al)
 	if (!ssl_base64_reline(ba, ft_strlen((char*)ba->msg)) ||
 			(!check_base64((char*)ba->msg)) || (ft_strlen((char*)ba->msg) % 4))
 		return (dis_error(NULL, N_BASE64, 0, "data"));
-	al.old = (!ba->len) ? ft_strlen((char *)ba->msg) : ba->len;
+	al.old = ft_strlen((char *)ba->msg);
 	al.len = 3 * (al.old / 4);
 	ba->data = ft_memalloc(sizeof(uint8_t) * al.len + 1);
 	ba->len = ssl_base64_dchelp(ba, al);
