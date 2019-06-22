@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/16 18:09:02 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/18 11:53:42 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/21 17:21:18 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,10 @@
 # define DES_CB			(1 << 1)
 # define DES_C1			(1 << 2)
 # define DES_TR			(1 << 3)
+# define DES_CT1		(1 << 4)
+# define DES_TR1		(1 << 5)
+# define DES_TR2		(1 << 6)
+# define DES_TR3		(1 << 7)
 
 # define DES_NU			-2
 

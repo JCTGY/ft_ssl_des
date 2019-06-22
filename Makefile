@@ -6,7 +6,7 @@ DES_DIR := src/des/
 OBJ_DIR := obj/
 LIBFT_DIR = libft/
 
-CFLAG := -Wall -Wextra -Werror
+CFLAG := -g -Wall -Wextra -Werror
 
 INC := -Iincludes
 
@@ -39,6 +39,7 @@ DES_SRC :=	ssl_des.c \
 			ssl_des_help_2.c \
 			ssl_des_algo.c \
 			ssl_des_algo_2.c \
+			ssl_des_tri.c \
 			ssl_des_output.c \
 
 

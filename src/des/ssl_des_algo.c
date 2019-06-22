@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/22 20:15:46 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/21 12:48:36 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/21 15:40:02 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int				ssl_rm_padding(t_ba64 *ba, t_key *k)
 	return (0);
 }
 
-static int		ssl_des_init(t_ba64 *ba, t_key *k)
+int				ssl_des_init(t_ba64 *ba, t_key *k)
 {
 	size_t		m;
 	uint64_t	sk[16];
@@ -67,7 +67,6 @@ static int		ssl_des_init(t_ba64 *ba, t_key *k)
 		ba->last = *(uint64_t *)k->iv;
 	ba->data = (uint8_t *)ft_memalloc(sizeof(uint8_t) * ba->len + 1);
 	m = 0;
-	ba->ct |= (!m && (ba->ct & DES_CB)) ? DES_C1 : 0;
 	while (m < ba->len)
 	{
 		msg = ssl_block(k->msg + m);
@@ -87,58 +86,6 @@ void			ssl_swap_wsalt(t_ba64 *ba, t_key *k)
 	ft_memset(k->msg, 0, ba->len);
 	ft_memcpy(k->msg, ba->data, ba->len);
 	ft_memdel((void *)&ba->data);
-}
-
-static void		ssl_trkey_init(t_ba64 *ba, t_key *k)
-{
-	if (ba->aoe != BA64_D)
-	{
-		ft_memcpy(k->key, k->k1, 8);
-		ssl_des_init(ba, k);
-		printf("what is the len == %zu\n", ba->len);
-		ssl_swap_wsalt(ba, k);
-	//	write(1, ba->msg, ba->len + 16);
-	//	printf("\n**************\n");
-	//	ssl_swap_data(ba);
-		ba->aoe = BA64_D;
-		ft_memset(k->key, 0, 8);
-		ft_memcpy(k->key, k->k2, 8);
-		ssl_des_init(ba, k);
-	//	write(1, ba->data, ba->len);
-	//	printf("\n**************\n");
-		printf("what is the len == %zu\n", ba->len);
-	//	ssl_swap_data(ba);
-		ssl_swap_wsalt(ba, k);
-		ba->aoe = BA64_E;
-		ft_memset(k->key, 0, 8);
-		ft_memcpy(k->key, k->k3, 8);
-		ssl_des_init(ba, k);
-	//	write(1, ba->data, ba->len);
-	//	printf("\n**************\n");
-		printf("what is the len == %zu\n", ba->len);
-	}
-	else if (ba->aoe == BA64_D)
-	{
-		ft_memcpy(k->key, k->k3, 8);
-	//	if (!ft_strncmp((char *)ba->msg, "Salted__", 8))
-	//		ba->len = ba->len - 16;
-		ssl_des_init(ba, k);
-		printf("what is the len == %zu\n", ba->len);
-		ssl_swap_wsalt(ba, k);
-	//	ssl_swap_data(ba);
-		ba->aoe = BA64_E;
-		ft_memset(k->key, 0, 8);
-		ft_memcpy(k->key, k->k2, 8);
-		ssl_des_init(ba, k);
-		printf("what is the len == %zu\n", ba->len);
-		ssl_swap_wsalt(ba, k);
-	//	ssl_swap_data(ba);
-		ba->aoe = BA64_D;
-		ft_memset(k->key, 0, 8);
-		ft_memcpy(k->key, k->k1, 8);
-		ssl_des_init(ba, k);
-		printf("what is the len == %zu\n", ba->len);
-	}
 }
 
 int				ssl_des_algo(t_ba64 *ba, t_key *k)
