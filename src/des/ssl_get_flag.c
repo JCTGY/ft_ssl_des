@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/21 19:25:04 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/21 20:22:33 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/22 10:03:40 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,9 +108,9 @@ int				ssl_des_flag(t_ba64 *ba, int ac, char **av, int i)
 		else
 			return (ba64_error(av[i], W_UKNOW));
 	}
-	if ((ba->key == NULL || !ft_strcmp(ba->cmd, "des3") ||
-				!ft_strcmp(ba->cmd, "des3_ecb") ||
-				!ft_strcmp(ba->cmd, "des3-cbc")) && ba->pflag != BA64_P)
+	if ((ba->key == NULL || !(ft_strcmp(ba->cmd, "des3")) ||
+				!(ft_strcmp(ba->cmd, "des3-ecb")) ||
+				!(ft_strcmp(ba->cmd, "des3-cbc"))) && ba->pflag != BA64_P)
 	{
 		if (!ssl_stdin_key(ba))
 			return (0);

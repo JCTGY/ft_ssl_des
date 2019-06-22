@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/04 17:58:04 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/21 20:04:07 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/06/22 10:04:25 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ static void			ssl_tri_key(t_ba64 *ba, t_key *k)
 
 static void			calculate_key(t_ba64 *ba, t_key *k)
 {
-	if (ba->key)
+	if (ba->key && !(ba->ct & DES_TR))
 	{
 		ssl_hex_to_by((uint8_t *)ba->key, k, I_KEY);
 		ssl_hex_to_by((uint8_t *)ba->iv, k, I_IV);
