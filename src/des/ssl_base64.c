@@ -24,9 +24,9 @@ void			ssl_free_ba(t_ba64 *ba)
 
 static int		ssl_base64_flag(t_ba64 *ba, int ac, char **av, int i)
 {
+	ba->cmd = av[1];
 	while (++i < ac)
 	{
-		ba->cmd = av[1];
 		if (!(ft_strcmp(av[i], "-i")) && (i + 1 >= ac))
 			return (ba64_error(av[i], W_NOFILE));
 		else if (!ft_strcmp(av[i], "-i"))
