@@ -74,7 +74,10 @@ int				ssl_base64_reline(t_ba64 *ba, int len)
 	}
 	if (ba->msg[in.i - 1] != '\n' && in.c != in.n)
 		return (0);
-	temp[in.t - 1] = '\0';
+	if (ba->msg[in.i - 1] == '\0')
+		temp[in.t - 1] = '\0';
+	else
+		temp[in.t] = '\0';
 	ssl_reline_help(ba, in.i, temp);
 	return (1);
 }

@@ -58,7 +58,7 @@ static void			ssl_base64_enhelp(t_ba64 *ba, t_balgo al)
 		ba->data[al.y++] = g_base64_encd[(al.al >> 2 * 6) & 63];
 		ba->data[al.y++] = g_base64_encd[(al.al >> 1 * 6) & 63];
 		ba->data[al.y++] = g_base64_encd[(al.al >> 0 * 6) & 63];
-		if (((al.y - al.c) % 64 == 0) && (al.y >= 64))
+		if (((al.y - al.c) % 64 == 0) && (al.y >= 64) && (al.x != al.old))
 		{
 			ba->data[al.y++] = '\n';
 			al.c++;
