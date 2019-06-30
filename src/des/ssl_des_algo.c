@@ -75,17 +75,17 @@ void			ssl_swap_wsalt(t_ba64 *ba, t_key *k)
 
 int				ssl_des_algo(t_ba64 *ba, t_key *k)
 {
-	if (ba->key && !ba->iv)
-	{
-		ft_putstr("iv undefined\n");
-		return (0);
-	}
 	if (!ft_strcmp(ba->cmd, "des-cbc") || !ft_strcmp(ba->cmd, "des") ||
 			!ft_strcmp(ba->cmd, "des3") || !ft_strcmp(ba->cmd, "des3-cbc"))
 		ba->ct |= DES_CB;
 	if (!ft_strcmp(ba->cmd, "des3") || !ft_strcmp(ba->cmd, "des3-ecb") ||
 		!ft_strcmp(ba->cmd, "des3-cbc"))
 		ba->ct |= DES_TR;
+	if (ba->key && !ba->iv && (ba->ct & DES_CB))
+	{
+		ft_putstr("iv undefined\n");
+		return (0);
+	}
 	ssl_allocate_k(k);
 	ssl_generate_key(ba, k);
 	ssl_padding(ba, k, ba->len);

@@ -39,7 +39,7 @@ static void			ssl_one_key(t_ba64 *ba, t_key *k)
 			!(ft_strncmp((char *)ba->msg, "Salted__", 8)))
 			? ft_strlen(ba->skey) + 8 : ft_strlen(ba->skey);
 	temp = ft_memalloc(sizeof(*temp) * len + 1);
-	ft_memcpy(temp, ba->skey, 8);
+	ft_memcpy(temp, ba->skey, ft_strlen(ba->skey));
 	if ((ba->aoe != BA64_D && !ba->key) ||
 			!(ft_strncmp((char *)ba->msg, "Salted__", 8)))
 		ft_memcpy(temp + ft_strlen(ba->skey), k->salt, 8);
@@ -70,7 +70,8 @@ static void			calculate_key(t_ba64 *ba, t_key *k)
 	if (ba->key && !(ba->ct & DES_TR))
 	{
 		ssl_hex_to_by((uint8_t *)ba->key, k, I_KEY);
-		ssl_hex_to_by((uint8_t *)ba->iv, k, I_IV);
+		if (ba->iv)
+			ssl_hex_to_by((uint8_t *)ba->iv, k, I_IV);
 	}
 	else if (!(ba->ct & DES_TR))
 		ssl_one_key(ba, k);
