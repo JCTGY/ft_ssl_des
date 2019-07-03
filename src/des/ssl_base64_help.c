@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/20 18:18:11 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/07/03 08:21:53 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/07/03 08:52:37 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int				ssl_base64_reline(t_ba64 *ba, int len)
 			if (ba->msg[in.i] != '\n')
 				return (0);
 		}
-		else
+		else if (ba->msg[in.i] != '\n')
 			temp[in.t++] = ba->msg[in.i];
 		if (ba->msg[in.i - 1] == '\n')
 			in.n++;
