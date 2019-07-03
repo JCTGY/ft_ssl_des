@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/17 15:49:04 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/15 13:05:40 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/07/02 18:19:01 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static int			ssl_base64_dchelp(t_ba64 *ba, t_balgo al)
 
 static int			ssl_base64_decode(t_ba64 *ba, t_balgo al)
 {
-	if (!ssl_base64_reline(ba, ft_strlen((char*)ba->msg)) ||
+	if (!ssl_base64_reline(ba, ft_strlen((char*)ba->msg))) ||
 			(!check_base64((char*)ba->msg)) || (ft_strlen((char*)ba->msg) % 4))
 		return (dis_error(NULL, N_BASE64, 0, "data"));
 	al.old = ft_strlen((char *)ba->msg);

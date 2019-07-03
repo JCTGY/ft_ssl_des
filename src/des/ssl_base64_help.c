@@ -6,7 +6,7 @@
 /*   By: jchiang- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/20 18:18:11 by jchiang-          #+#    #+#             */
-/*   Updated: 2019/06/15 13:06:19 by jchiang-         ###   ########.fr       */
+/*   Updated: 2019/07/02 18:17:29 by jchiang-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,17 @@ uint8_t			ssl_base64_deta(uint8_t c)
 	return (-1);
 }
 
-static void		ssl_reline_help(t_ba64 *ba, int len, char *temp)
+static void		ssl_reline_help(t_ba64 *ba, t_index in, char *temp)
 {
+	printf("what is in.i == %d\n", in.i);
+	printf("what is in.t == %d\n", in.t);
+	if (ba->msg[in.i - 1] == '\0')
+		temp[in.t - 1] = '\0';
+	else
+		temp[in.t] = '\0';
 	ft_memdel((void *)&ba->msg);
-	ba->msg = ft_memalloc(sizeof(uint8_t) * len);
-	ft_memcpy(ba->msg, temp, len);
+	ba->msg = ft_memalloc(sizeof(uint8_t) * in.i);
+	ft_memcpy(ba->msg, temp, in.i);
 	ft_memdel((void*)&temp);
 }
 
@@ -74,10 +80,7 @@ int				ssl_base64_reline(t_ba64 *ba, int len)
 	}
 	if (ba->msg[in.i - 1] != '\n' && in.c != in.n)
 		return (0);
-	if (ba->msg[in.i - 1] == '\0')
-		temp[in.t - 1] = '\0';
-	else
-		temp[in.t] = '\0';
-	ssl_reline_help(ba, in.i, temp);
+	ssl_reline_help(ba, in, temp);
+	printf("what is ba->msg == \n%s\n", ba->msg);
 	return (1);
 }
