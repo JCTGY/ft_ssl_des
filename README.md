@@ -1,4 +1,4 @@
-# ft_ssl DES Cipher Encryption
+DES Cipher Encryption
 
 ![](https://i.imgur.com/5gbYhtW.jpg)
 
