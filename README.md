@@ -1,4 +1,4 @@
-#DES Cipher Encryption
+# DES Cipher Encryption
 
 ![](https://i.imgur.com/5gbYhtW.jpg)
 
@@ -42,11 +42,21 @@ des:
 * -s, the salt in hex is the next argument. (Behave like openssl des -S)
 * -v, initialization vector in hex is the next argument. (Behave like openssl des -iv not openssl des -v)
 
+### How to use
+
+clone the repository:
 ```
-git clone https://github.com/JCTGY/ft_ssl_md5.git ~/ft_ssl
-cd ~/ft_ssl
-make
+cd ~
+git clone https://github.com/JCTGY/ft_ssl_des.git ft_ssl_des
+cd ~/ft_ssl_des
+make 
 ```
+usage: 
+```
+./ft_ssl base64 [-i file] [-o file] [-d] [-e]
+./ft_ssl ciphername [-a] [-d] [-e] [-i file] [-v IV]
+             [-k key]  [-o file] [-p pass] [-s salt]
+ ```
 
 ### Useful link
 [Base64 wiki algorithum](https://en.wikibooks.org/wiki/Algorithm_Implementation/Miscellaneous/Base64)\
