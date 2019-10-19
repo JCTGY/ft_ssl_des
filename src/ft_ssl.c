@@ -12,6 +12,10 @@
 
 #include "ft_ssl.h"
 
+/*
+ * std input
+ * ssl -> struct t_ssl
+ */
 static int		ssl_stdin(t_ssl *ssl)
 {
 	char		hash[10];
@@ -27,6 +31,12 @@ static int		ssl_stdin(t_ssl *ssl)
 	return (0);
 }
 
+/*
+ * **argv: double array of std input
+ * *ssl: struct t_ssl (main struct for carry the message and flags)
+ * i: index of the array string of **argv
+ * x: index of the position in the string
+ */
 static int		allocate_sflag(char **argv, t_ssl *ssl, int i, int x)
 {
 	ssl->flag |= SSL_S;
@@ -50,6 +60,10 @@ static int		allocate_sflag(char **argv, t_ssl *ssl, int i, int x)
 	return (i);
 }
 
+/*
+ * function to collects different flags
+ * find -s or -p, send to seperate function to process
+ */
 static int		collect_flags(char **argv, t_ssl *ssl)
 {
 	int		i;
@@ -79,6 +93,10 @@ static int		collect_flags(char **argv, t_ssl *ssl)
 	return (i);
 }
 
+/*
+ * check the file path is valid
+ * return error if not valid
+ */
 static int		read_msg(char **argv, t_ssl *ssl, int i)
 {
 	struct stat		buff;
@@ -107,6 +125,11 @@ static int		read_msg(char **argv, t_ssl *ssl, int i)
 	}
 	return (1);
 }
+
+/*
+ * Main function to handle std input
+ * ssl_cpcverify send to check is the input des or not
+ */
 
 int				main(int argc, char **argv)
 {
