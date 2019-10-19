@@ -36,9 +36,9 @@ DES_SRC :=	ssl_des.c \
 			ssl_get_key.c \
 			ssl_key_shift.c \
 			ssl_des_help.c \
-			ssl_des_help_2.c \
+			ssl_des_key_help.c \
 			ssl_des_algo.c \
-			ssl_des_algo_2.c \
+			ssl_des_tri_algo.c \
 			ssl_des_tri.c \
 			ssl_des_output.c \
 
