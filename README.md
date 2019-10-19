@@ -1,6 +1,6 @@
 # DES Cipher Encryption
 
-![](https://i.imgur.com/5gbYhtW.jpg)
+
 
 ### Objective
 42 school project we will implements cipher text encryption in C without using most of the standard libary.
